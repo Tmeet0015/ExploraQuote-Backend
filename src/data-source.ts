@@ -2,6 +2,7 @@ import "reflect-metadata";
 import { DataSource } from "typeorm";
 import { logs_error } from "./entity/logs_error";
 import { User } from "./entity/users";
+import { Organization } from "./entity/organisation";
 
 require("dotenv").config();
 
@@ -16,7 +17,8 @@ export const AppDataSource = new DataSource({
   logging: false, //to show execute query in console
   entities: [
     logs_error,
-    User
+    User,
+    Organization
   ],
   migrations: [],
   subscribers: [],
