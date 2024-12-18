@@ -36,13 +36,13 @@ AppDataSource.initialize()
         app.use('/', mainRouter)
         app.use(express.static(__dirname + '/'))
 
-        // app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-        //     if (err instanceof SyntaxError) {
-        //         // Handle other errors
-        //         console.error(err.stack);
-        //         res.status(500).send('Internal Server Error!!!');
-        //     }
-        // });
+        app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+            if (err instanceof SyntaxError) {
+                // Handle other errors
+                console.error(err.stack);
+                res.status(500).send('Internal Server Error!!!');
+            }
+        });
 
         const options: any = {
             // key: fs.readFileSync('private.key'),
