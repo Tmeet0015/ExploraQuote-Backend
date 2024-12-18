@@ -17,7 +17,7 @@ export const AppDataSource = new DataSource({
   username: process.env.DB_USER,
   password: process.env.DB_PASS,
   database: process.env.DB_DATABASE,
-  synchronize: true, // make it true to synchronize every Entity with our database
+  synchronize: false, // make it true to synchronize every Entity with our database
   logging: false, //to show execute query in console
   entities: [
     logs_error,
