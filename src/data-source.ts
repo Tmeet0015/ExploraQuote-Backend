@@ -3,6 +3,10 @@ import { DataSource } from "typeorm";
 import { logs_error } from "./entity/logs_error";
 import { User } from "./entity/users";
 import { Organization } from "./entity/organisation";
+import { Destination } from "./entity/destination";
+import { Location } from "./entity/location";
+import { DestinationLocation } from "./entity/destinationLocation";
+import { TravelMode } from "./entity/travelMode";
 
 require("dotenv").config();
 
@@ -13,12 +17,16 @@ export const AppDataSource = new DataSource({
   username: process.env.DB_USER,
   password: process.env.DB_PASS,
   database: process.env.DB_DATABASE,
-  synchronize: false, // make it true to synchronize every Entity with our database
+  synchronize: true, // make it true to synchronize every Entity with our database
   logging: false, //to show execute query in console
   entities: [
     logs_error,
     User,
-    Organization
+    Organization,
+    Destination,
+    Location,
+    DestinationLocation,
+    TravelMode
   ],
   migrations: [],
   subscribers: [],
