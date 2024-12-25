@@ -1,7 +1,7 @@
 import { AppDataSource } from './data-source'
 import express, { NextFunction, Request, Response } from 'express'
 import cors from 'cors'
-import mainRouter from './routes/index'
+import mainRouter from './routes/index.routes'
 import http from 'http'
 import dotenv from "dotenv"
 

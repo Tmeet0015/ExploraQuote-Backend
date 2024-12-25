@@ -8,22 +8,22 @@ import {
     deleteOrganization,
   } from "../controllers/organization.controller";
 
-const OrganizationRouter = express.Router();
+const organizationRouter = express.Router();
   
   // Route to create a new organization
-  OrganizationRouter.post("/",authMiddleware, createOrganization);
+  organizationRouter.post("/",authMiddleware, createOrganization);
   
   // Route to get all organizations
-  OrganizationRouter.get("/",authMiddleware, getOrganizations);
+  organizationRouter.get("/",authMiddleware, getOrganizations);
   
   // Route to get a specific organization by ID
-  OrganizationRouter.get("/:id",authMiddleware, getOrganizationById);
+  organizationRouter.get("/:id",authMiddleware, getOrganizationById);
   
   // Route to update an organization by ID
-  OrganizationRouter.put("/:id",authMiddleware, updateOrganization);
+  organizationRouter.put("/:id",authMiddleware, updateOrganization);
   
   // Route to delete an organization by ID
-  OrganizationRouter.delete("/:id",authMiddleware, deleteOrganization);
+  organizationRouter.delete("/:id",authMiddleware, deleteOrganization);
   
 
-export default OrganizationRouter;
+export default organizationRouter;

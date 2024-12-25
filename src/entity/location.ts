@@ -7,6 +7,7 @@ import {
     OneToMany,
   } from "typeorm";
 import { DestinationLocation } from "./destinationLocation";
+import { Packages } from "./packages";
   
   @Entity()
   export class Location {
@@ -43,5 +44,8 @@ import { DestinationLocation } from "./destinationLocation";
 
     @OneToMany(() => DestinationLocation, (destination_location) => destination_location.location, { cascade: true })
     destination_location: DestinationLocation
+
+    @OneToMany(() => Packages, (packages) => packages.location, { cascade: true })
+    location_packages: Packages
   }
   
