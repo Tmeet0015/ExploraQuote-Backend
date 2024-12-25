@@ -17,14 +17,14 @@ import { Itinerary } from "./itineraries";
     @PrimaryGeneratedColumn()
     package_id: number;
   
-    @ManyToOne(() => Location, (location) => location.location_packages, { onDelete: 'CASCADE', nullable: true  })
+    @ManyToOne(() => Location, (location) => location.location_packages, { onDelete: 'CASCADE'  })
     @JoinColumn({
         name: 'location',
         referencedColumnName: 'location_id'
     })
     location: Location;
 
-    @ManyToOne(() => Client, (client) => client.client_packages, { onDelete: 'CASCADE', nullable: true  })
+    @ManyToOne(() => Client, (client) => client.client_packages, { onDelete: 'CASCADE'  })
     @JoinColumn({
         name: 'client',
         referencedColumnName: 'client_id'
