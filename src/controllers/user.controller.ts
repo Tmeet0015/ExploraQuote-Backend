@@ -33,7 +33,7 @@ export const login = async (req: Request, res: Response): Promise<any> =>  {
       const newUserData = await UserRepository.findOne({
         where: {
           email: email,
-          is_active: false,
+          is_active: true,
         },
       });
 
