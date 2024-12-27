@@ -33,7 +33,7 @@ AppDataSource.initialize()
         app.get('/', (req, res) => {
             res.json({ message: 'Welcome to Explore Tours-Travel backend.' })
         })
-        app.use('/', mainRouter)
+        app.use('/api', mainRouter)
         app.use(express.static(__dirname + '/'))
 
         app.use((err: any, req: Request, res: Response, next: NextFunction) => {
