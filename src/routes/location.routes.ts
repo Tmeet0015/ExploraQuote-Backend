@@ -11,7 +11,7 @@ import { authMiddleware } from "../middleware/jwt";
 const router = express.Router();
 
 router.post("/", authMiddleware, createLocation); // Create
-router.get("/", authMiddleware, getAllLocation); // Read All
+router.post("/", authMiddleware, getAllLocation); // Read All
 router.get("/:id", authMiddleware, getOneLocation); // Read One
 router.put("/:id", authMiddleware, updateLocation); // Update
 router.delete("/:id", authMiddleware, deleteLocation); // Delete
