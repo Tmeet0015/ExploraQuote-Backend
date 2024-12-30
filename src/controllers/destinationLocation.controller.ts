@@ -266,7 +266,9 @@ const DestinationLocationRepository = AppDataSource.getRepository(DestinationLoc
       // Validation Checks
       page = parseInt(page) || 1;
       limit = parseInt(limit) || 10;
-      sortBy = sortBy || "location_id";
+      sortBy = sortBy ?? "location_id";
+
+      console.log('sortBy :>> ', sortBy);
       order = order?.toUpperCase() === "DESC" ? "DESC" : "ASC";
   
       const allowedSortFields = ["location_id", "location_name", "created_at"];
