@@ -6,8 +6,8 @@ import { Packages } from "../entity/packages";
 
   export const createPackage = async (req: Request, res: Response) => {
     try {
-      const packageData = packageRepository.create(req.body); // Create an entity instance
-      const savedPackage = await packageRepository.save(packageData); // Save to the database
+      const packageData = packageRepository.create(req.body); 
+      const savedPackage = await packageRepository.save(packageData);
       res.status(201).json(savedPackage);
     } catch (error) {
       res.status(500).json({ message: error.message });

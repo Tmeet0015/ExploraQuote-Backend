@@ -11,6 +11,7 @@ import {
   import { Location } from "./location";
   import { Client } from "./client";
 import { Itinerary } from "./itineraries";
+import { DestinationLocation } from "./destinationLocation";
   
   @Entity()
   export class Packages {
@@ -73,6 +74,13 @@ import { Itinerary } from "./itineraries";
 
     @OneToMany(() => Itinerary, (itinerary) => itinerary.packages, { cascade: true })
     itinerary_package: Itinerary
+
+    @ManyToOne(() => DestinationLocation, (destloc) => destloc.packages, { onDelete: 'CASCADE', nullable :true })
+    @JoinColumn({
+        name: 'destination_location',
+        referencedColumnName: 'destinationLocation_id'
+    })
+    destination_location: DestinationLocation;
     
   }
   

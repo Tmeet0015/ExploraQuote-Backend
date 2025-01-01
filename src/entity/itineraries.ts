@@ -6,9 +6,12 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   JoinColumn,
+  OneToMany,
 } from "typeorm";
 import { Packages } from "./packages";
 import { Client } from "./client";
+import { TravelBooking } from "./travelBooking";
+import { Hotel } from "./hotel";
 
 @Entity()
 export class Itinerary {
@@ -58,4 +61,16 @@ export class Itinerary {
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @ManyToOne(() => Hotel, (htl) => htl.itinerary, { onDelete: 'CASCADE', nullable: true  })
+  @JoinColumn({
+      name: 'hotel',
+      referencedColumnName: 'hotel_id'
+  })
+  hotel: Hotel;
+
+
+  @OneToMany(() => TravelBooking, (travelBooking) => travelBooking.itinerary, { cascade: true })
+  travel_booking: TravelBooking
+  
 }
