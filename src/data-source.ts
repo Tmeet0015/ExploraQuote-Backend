@@ -10,6 +10,9 @@ import { TravelMode } from "./entity/travelMode";
 import { Client } from "./entity/client";
 import { Itinerary } from "./entity/itineraries";
 import { Packages } from "./entity/packages";
+import { FlightDetails } from "./entity/flightDetails";
+import { Hotel } from "./entity/hotel";
+import { TravelBooking } from "./entity/travelBooking";
 
 require("dotenv").config();
 
@@ -32,7 +35,11 @@ export const AppDataSource = new DataSource({
     TravelMode,
     Packages,
     Client,
-    Itinerary
+    Itinerary,
+    FlightDetails,
+    Hotel,
+    TravelBooking,
+    
   ],
   migrations: [],
   subscribers: [],
