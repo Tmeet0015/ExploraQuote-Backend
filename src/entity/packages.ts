@@ -8,22 +8,14 @@ import {
     JoinColumn,
     OneToMany,
   } from "typeorm";
-  import { Location } from "./location";
   import { Client } from "./client";
 import { Itinerary } from "./itineraries";
-import { DestinationLocation } from "./destinationLocation";
+import { PackageDestLocation } from "./packageDestLocation";
   
   @Entity()
   export class Packages {
     @PrimaryGeneratedColumn()
     package_id: number;
-  
-    @ManyToOne(() => Location, (location) => location.location_packages, { onDelete: 'CASCADE'  })
-    @JoinColumn({
-        name: 'location',
-        referencedColumnName: 'location_id'
-    })
-    location: Location;
 
     @ManyToOne(() => Client, (client) => client.client_packages, { onDelete: 'CASCADE'  })
     @JoinColumn({
@@ -75,12 +67,11 @@ import { DestinationLocation } from "./destinationLocation";
     @OneToMany(() => Itinerary, (itinerary) => itinerary.packages, { cascade: true })
     itinerary_package: Itinerary
 
-    @ManyToOne(() => DestinationLocation, (destloc) => destloc.packages, { onDelete: 'CASCADE', nullable :true })
-    @JoinColumn({
-        name: 'destination_location',
-        referencedColumnName: 'destinationLocation_id'
-    })
-    destination_location: DestinationLocation;
+    @OneToMany(() => PackageDestLocation, (pkg) => pkg.package, { cascade: true, nullable : true})
+    package_dest_location: PackageDestLocation
+
+    @Column({ default: true })
+    is_active: boolean
     
   }
   

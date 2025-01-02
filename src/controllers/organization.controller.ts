@@ -58,7 +58,7 @@ export const getOrganizationById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const organization = await OrganizationRepository.findOne({
-      where: { brand_id: parseInt(id) },
+      where: { organisation_id: parseInt(id) },
     });
 
     if (!organization) {
@@ -91,7 +91,7 @@ export const updateOrganization = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const organization = await OrganizationRepository.findOne({
-      where: { brand_id: parseInt(id) },
+      where: { organisation_id: parseInt(id) },
     });
 
     if (!organization) {

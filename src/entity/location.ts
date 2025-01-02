@@ -45,7 +45,5 @@ import { Packages } from "./packages";
     @OneToMany(() => DestinationLocation, (destination_location) => destination_location.location, { cascade: true })
     destination_location: DestinationLocation
 
-    @OneToMany(() => Packages, (packages) => packages.location, { cascade: true })
-    location_packages: Packages
   }
   

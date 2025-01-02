@@ -227,16 +227,16 @@ const DestinationLocationRepository = AppDataSource.getRepository(DestinationLoc
 
   export const createLocation = async (req: Request, res: Response) : Promise<any> => {
     try {
-      const { location_name,country,city,latitude,longitude, } = req.body;
+      const { location_name, latitude,longitude, destination_id} = req.body;
   
-      if (!location_name || !latitude || !longitude) {
+      if (!location_name || !latitude || !longitude || !destination_id) {
         return res.status(400).json(
           CreateErrorResponse("Error", "Invalid Payload!", "Invalid")
         );
       }
   
       const existingLocation = await LocationRepository.findOne({
-        where: { location_name },
+        where: { location_name : String(location_name).trim() },
       });
   
       if (existingLocation) {
@@ -244,12 +244,19 @@ const DestinationLocationRepository = AppDataSource.getRepository(DestinationLoc
           CreateErrorResponse("Error", "Location name already exists!", "Duplicate")
         );
       }
+
+      const locationBody = {
+        destination_id,
+        ...req.body
+      };
   
-      const newLocation = LocationRepository.create(req.body);
+      const newLocation = LocationRepository.create(locationBody);
       const result = await LocationRepository.save(newLocation);
+      
+      await DestinationLocationRepository.save({destination : {destination_id : Number(destination_id)}, location : {location_id : result[0].location_id } })
   
       return res.status(201).json(
-        CreateSuccessResponse("Location created successfully!", result)
+        CreateSuccessResponse("Location created successfully!", )
       );
     } catch (error) {
       return res.status(500).json(

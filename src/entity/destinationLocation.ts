@@ -10,22 +10,22 @@ import {
   } from "typeorm";
   import { Destination } from "./destination";
   import { Location } from "./location";
-import { Packages } from "./packages";
 import { Hotel } from "./hotel";
+import { PackageDestLocation } from "./packageDestLocation";
   
   @Entity()
   export class DestinationLocation {
     @PrimaryGeneratedColumn()
     destinationLocation_id: number;
 
-    @ManyToOne(() => Destination, (destination) => destination.destination_id, { onDelete: 'CASCADE' })
+    @ManyToOne(() => Destination, (destination) => destination.destination_id, { onDelete: 'CASCADE', nullable : true})
     @JoinColumn({
         name: 'destination',
         referencedColumnName: 'destination_id'
     })
     destination: Destination;
 
-    @ManyToOne(() => Location, (loc) => loc.location_id, { onDelete: 'CASCADE' })
+    @ManyToOne(() => Location, (loc) => loc.location_id, { onDelete: 'CASCADE', nullable : true})
     @JoinColumn({
         name: 'location',
         referencedColumnName: 'location_id'
@@ -45,10 +45,10 @@ import { Hotel } from "./hotel";
     @UpdateDateColumn()
     updated_at: Date;
 
-    @OneToMany(() => Packages, (pkg) => pkg.destination_location, { cascade: true })
-    packages: Packages
-
-    @OneToMany(() => Hotel, (htl) => htl.destination_location, { cascade: true })
+    @OneToMany(() => Hotel, (htl) => htl.destination_location, { cascade: true, nullable : true })
     hotel: Hotel
+    
+    @OneToMany(() => PackageDestLocation, (pkg) => pkg.destination_location, { cascade: true, nullable : true})
+    package_dest_location: PackageDestLocation
   }
   

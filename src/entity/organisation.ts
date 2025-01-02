@@ -4,7 +4,7 @@ import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateCol
   @Entity()
   export class Organization {
     @PrimaryGeneratedColumn()
-    brand_id: number;
+    organisation_id: number;
   
     @Column({nullable : true})
     name: string;

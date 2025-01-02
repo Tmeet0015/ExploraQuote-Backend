@@ -12,12 +12,15 @@ export const checkForDuplicates = async <T>({
   const existing = await repository.findOne({ where: { [field]: value } as any });
   return !!existing;
 };
-
-
   
-  export const paginate = (query: any, page: number, limit: number) => {
-    const offset = (page - 1) * limit;
-    query.skip(offset).take(limit);
-    return query;
-  };
-  
+export const paginate = (query: any, page: number, limit: number) => {
+  const offset = (page - 1) * limit;
+  query.skip(offset).take(limit);
+  return query;
+};
+
+export const removeUndefinedValues = (obj: { [s: string]: unknown; } | ArrayLike<unknown>) => {
+  return Object.fromEntries(
+      Object.entries(obj).filter(([key, value]) => value !== undefined)
+  );
+}

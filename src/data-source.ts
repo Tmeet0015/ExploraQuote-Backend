@@ -13,6 +13,7 @@ import { Packages } from "./entity/packages";
 import { FlightDetails } from "./entity/flightDetails";
 import { Hotel } from "./entity/hotel";
 import { TravelBooking } from "./entity/travelBooking";
+import { PackageDestLocation } from "./entity/packageDestLocation";
 
 require("dotenv").config();
 
@@ -39,7 +40,7 @@ export const AppDataSource = new DataSource({
     FlightDetails,
     Hotel,
     TravelBooking,
-    
+    PackageDestLocation
   ],
   migrations: [],
   subscribers: [],
