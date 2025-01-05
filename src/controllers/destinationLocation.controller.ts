@@ -348,7 +348,6 @@ const DestinationLocationRepository = AppDataSource.getRepository(DestinationLoc
       limit = parseInt(limit) || 10;
       sortBy = sortBy ?? "location_id";
 
-      console.log('sortBy :>> ', sortBy);
       order = order?.toUpperCase() === "DESC" ? "DESC" : "ASC";
   
       const allowedSortFields = ["location_id", "location_name", "created_at"];
@@ -564,6 +563,15 @@ export const getAllDestinationLocations = async (req: Request, res: Response): P
       relations :{
         destination : true,
         location : true
+      },
+      where : {
+        status : 'active',
+        destination : {
+          status : 'active'
+        },
+        location : {
+          status: 'active'
+        }
       }
     });
     return res.status(200).send(CreateSuccessResponse("Destination locations fetched successfully!", destinationLocations));
