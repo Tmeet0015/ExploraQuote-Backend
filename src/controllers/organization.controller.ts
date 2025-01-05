@@ -3,15 +3,16 @@ import { Request, Response } from "express";
 import { AppDataSource } from "../data-source";
 import { Organization } from "../entity/organisation";
 import { writeTableErrorLog } from "../helpers/error_log";
-import { CreateErrorResponse } from "../helpers/responseHelper";
+import { CreateErrorResponse, CreateSuccessResponse } from "../helpers/responseHelper";
+import { removeUndefinedValues } from "../helpers/common";
 
 const OrganizationRepository = AppDataSource.getRepository(Organization);
 
 export const createOrganization = async (req: Request, res: Response) => {
   try {
-    const organization = OrganizationRepository.create(req.body);
-    const result = await OrganizationRepository.save(organization);
-    return res.status(201).json({ success: true, data: result });
+     await OrganizationRepository.insert(removeUndefinedValues(req.body));
+    return res.status(201)
+    .send(CreateSuccessResponse(`Added SuccessFully!`));
   } catch (error) {
     const errorlog = {
          cameFrom: "createOrganization",
@@ -34,7 +35,8 @@ export const createOrganization = async (req: Request, res: Response) => {
 export const getOrganizations = async (_req: Request, res: Response) => {
   try {
     const organizations = await OrganizationRepository.find();
-    return res.status(200).json({ success: true, data: organizations });
+    return res.status(200)
+    .send(CreateSuccessResponse(`Fetch SuccessFully!`, organizations));
   } catch (error) {
     const errorlog = {
         cameFrom: "getOrganizations",
@@ -67,7 +69,8 @@ export const getOrganizationById = async (req: Request, res: Response) => {
         .json({ success: false, message: "Organization not found" });
     }
 
-    return res.status(200).json({ success: true, data: organization });
+    return res.status(200)
+    .send(CreateSuccessResponse(`Fetch SuccessFully!`,organization));
   } catch (error) {
     const errorlog = {
         cameFrom: "getOrganizationById",
@@ -103,7 +106,8 @@ export const updateOrganization = async (req: Request, res: Response) => {
     const updatedData = OrganizationRepository.merge(organization, req.body);
     const result = await OrganizationRepository.save(updatedData);
 
-    return res.status(200).json({ success: true, data: result });
+    return res.status(200)
+    .send(CreateSuccessResponse(`Saved!`,result));
   } catch (error) {
     const errorlog = {
         cameFrom: "updateOrganization",
@@ -136,7 +140,7 @@ export const deleteOrganization = async (req: Request, res: Response) => {
 
     return res
       .status(200)
-      .json({ success: true, message: "Organization deleted successfully" });
+      .send(CreateSuccessResponse(`Deleted SuccessFully!`));
   } catch (error) {
     const errorlog = {
         cameFrom: "deleteOrganization",

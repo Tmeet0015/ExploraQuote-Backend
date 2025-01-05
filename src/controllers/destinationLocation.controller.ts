@@ -45,9 +45,21 @@ const DestinationLocationRepository = AppDataSource.getRepository(DestinationLoc
         CreateSuccessResponse("Destination created successfully!", result)
       );
     } catch (error) {
-      return res.status(500).json(
-        CreateErrorResponse("Error", "Internal Server Error!", "Something went wrong!")
-      );
+      const errorlog = {
+        cameFrom: "createDestination",
+        data: error,
+        token: res?.locals?.token == null ? null : res?.locals?.token,
+      };
+      writeTableErrorLog(errorlog);
+      return res
+        .status(500)
+        .json(
+          CreateErrorResponse(
+            "Error",
+            `Internal Server Error!`,
+            "Something Went Wrong!!"
+          )
+        );
     }
   }
 
@@ -117,9 +129,21 @@ const DestinationLocationRepository = AppDataSource.getRepository(DestinationLoc
         })
       );
     } catch (error) {
-      return res.status(500).json(
-        CreateErrorResponse("Error", "Internal Server Error!", "Something went wrong!")
-      );
+      const errorlog = {
+        cameFrom: "getAllDestination",
+        data: error,
+        token: res?.locals?.token == null ? null : res?.locals?.token,
+      };
+      writeTableErrorLog(errorlog);
+      return res
+        .status(500)
+        .json(
+          CreateErrorResponse(
+            "Error",
+            `Internal Server Error!`,
+            "Something Went Wrong!!"
+          )
+        );
     }
   }
 
@@ -148,9 +172,21 @@ const DestinationLocationRepository = AppDataSource.getRepository(DestinationLoc
         CreateSuccessResponse("Data retrieved successfully!", destination)
       );
     } catch (error) {
-      return res.status(500).json(
-        CreateErrorResponse("Error", "Internal Server Error!", "Something went wrong!")
-      );
+      const errorlog = {
+        cameFrom: "getOneDestination",
+        data: error,
+        token: res?.locals?.token == null ? null : res?.locals?.token,
+      };
+      writeTableErrorLog(errorlog);
+      return res
+        .status(500)
+        .json(
+          CreateErrorResponse(
+            "Error",
+            `Internal Server Error!`,
+            "Something Went Wrong!!"
+          )
+        );
     }
   }
 
@@ -191,9 +227,21 @@ const DestinationLocationRepository = AppDataSource.getRepository(DestinationLoc
         CreateSuccessResponse("Destination updated successfully!")
       );
     } catch (error) {
-      return res.status(500).json(
-        CreateErrorResponse("Error", "Internal Server Error!", "Something went wrong!")
-      );
+      const errorlog = {
+        cameFrom: "updateDestination",
+        data: error,
+        token: res?.locals?.token == null ? null : res?.locals?.token,
+      };
+      writeTableErrorLog(errorlog);
+      return res
+        .status(500)
+        .json(
+          CreateErrorResponse(
+            "Error",
+            `Internal Server Error!`,
+            "Something Went Wrong!!"
+          )
+        );
     }
   }
 
@@ -214,9 +262,21 @@ const DestinationLocationRepository = AppDataSource.getRepository(DestinationLoc
         CreateSuccessResponse("Destination deleted successfully!")
       );
     } catch (error) {
-      return res.status(500).json(
-        CreateErrorResponse("Error", "Internal Server Error!", "Something went wrong!")
-      );
+      const errorlog = {
+        cameFrom: "deleteDestination",
+        data: error,
+        token: res?.locals?.token == null ? null : res?.locals?.token,
+      };
+      writeTableErrorLog(errorlog);
+      return res
+        .status(500)
+        .json(
+          CreateErrorResponse(
+            "Error",
+            `Internal Server Error!`,
+            "Something Went Wrong!!"
+          )
+        );
     }
   }
 
@@ -236,7 +296,7 @@ const DestinationLocationRepository = AppDataSource.getRepository(DestinationLoc
       }
   
       const existingLocation = await LocationRepository.findOne({
-        where: { location_name : String(location_name).trim() },
+        where: { location_name : String(location_name).trim(), status : 'active' },
       });
   
       if (existingLocation) {
@@ -251,17 +311,30 @@ const DestinationLocationRepository = AppDataSource.getRepository(DestinationLoc
       };
   
       const newLocation = LocationRepository.create(locationBody);
-      const result = await LocationRepository.save(newLocation);
-      
-      await DestinationLocationRepository.save({destination : {destination_id : Number(destination_id)}, location : {location_id : result[0].location_id } })
+      const result = await LocationRepository.insert(newLocation);
+
+      await DestinationLocationRepository.insert({destination : {destination_id : Number(destination_id)}, location : { location_id : result.identifiers[0].location_id} })
   
       return res.status(201).json(
         CreateSuccessResponse("Location created successfully!", )
       );
     } catch (error) {
-      return res.status(500).json(
-        CreateErrorResponse("Error", "Internal Server Error!", "Something went wrong!")
-      );
+      
+      const errorlog = {
+        cameFrom: "createLocation",
+        data: error,
+        token: res?.locals?.token == null ? null : res?.locals?.token,
+      };
+      writeTableErrorLog(errorlog);
+      return res
+        .status(500)
+        .json(
+          CreateErrorResponse(
+            "Error",
+            `Internal Server Error!`,
+            "Something Went Wrong!!"
+          )
+        );
     }
   }
 
@@ -325,9 +398,21 @@ const DestinationLocationRepository = AppDataSource.getRepository(DestinationLoc
         })
       );
     } catch (error) {
-      return res.status(500).json(
-        CreateErrorResponse("Error", "Internal Server Error!", "Something went wrong!")
-      );
+      const errorlog = {
+        cameFrom: "getAllLocation",
+        data: error,
+        token: res?.locals?.token == null ? null : res?.locals?.token,
+      };
+      writeTableErrorLog(errorlog);
+      return res
+        .status(500)
+        .json(
+          CreateErrorResponse(
+            "Error",
+            `Internal Server Error!`,
+            "Something Went Wrong!!"
+          )
+        );
     }
   }
   
@@ -356,9 +441,21 @@ const DestinationLocationRepository = AppDataSource.getRepository(DestinationLoc
         CreateSuccessResponse("Data retrieved successfully!", destination)
       );
     } catch (error) {
-      return res.status(500).json(
-        CreateErrorResponse("Error", "Internal Server Error!", "Something went wrong!")
-      );
+      const errorlog = {
+        cameFrom: "getOneLocation",
+        data: error,
+        token: res?.locals?.token == null ? null : res?.locals?.token,
+      };
+      writeTableErrorLog(errorlog);
+      return res
+        .status(500)
+        .json(
+          CreateErrorResponse(
+            "Error",
+            `Internal Server Error!`,
+            "Something Went Wrong!!"
+          )
+        );
     }
   }
 
@@ -399,9 +496,21 @@ const DestinationLocationRepository = AppDataSource.getRepository(DestinationLoc
         CreateSuccessResponse("Location updated successfully!")
       );
     } catch (error) {
-      return res.status(500).json(
-        CreateErrorResponse("Error", "Internal Server Error!", "Something went wrong!")
-      );
+      const errorlog = {
+        cameFrom: "updateLocation",
+        data: error,
+        token: res?.locals?.token == null ? null : res?.locals?.token,
+      };
+      writeTableErrorLog(errorlog);
+      return res
+        .status(500)
+        .json(
+          CreateErrorResponse(
+            "Error",
+            `Internal Server Error!`,
+            "Something Went Wrong!!"
+          )
+        );
     }
   }
 
@@ -422,9 +531,21 @@ const DestinationLocationRepository = AppDataSource.getRepository(DestinationLoc
         CreateSuccessResponse("Location deleted successfully!")
       );
     } catch (error) {
-      return res.status(500).json(
-        CreateErrorResponse("Error", "Internal Server Error!", "Something went wrong!")
-      );
+      const errorlog = {
+        cameFrom: "deleteLocation",
+        data: error,
+        token: res?.locals?.token == null ? null : res?.locals?.token,
+      };
+      writeTableErrorLog(errorlog);
+      return res
+        .status(500)
+        .json(
+          CreateErrorResponse(
+            "Error",
+            `Internal Server Error!`,
+            "Something Went Wrong!!"
+          )
+        );
     }
   }
 

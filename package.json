@@ -9,7 +9,7 @@
     "dev": "node build/index.js",
     "preserve": "rimraf build | tsc.cmd",
     "serve": "nodemon build/index.js",
-    "nodemon": "nodemon src/index.ts",
+    "start": "nodemon src/index.ts",
     "build": "rimraf build | tsc"
   },
   "keywords": [],
