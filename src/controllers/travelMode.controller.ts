@@ -8,16 +8,16 @@ const travelModeRepository = AppDataSource.getRepository(TravelMode);
 
 export const createTravelMode = async (req: Request, res: Response) => {
   try {
-    const { name, travel_start_date, travel_end_date } = req.body;
+    // const { name, travel_start_date, travel_end_date } = req.body;
 
     // Prevent duplicate entries
-    const existingTravelMode = await travelModeRepository.findOne({
-      where: { name, travel_start_date, travel_end_date },
-    });
+    // const existingTravelMode = await travelModeRepository.findOne({
+    //   where: { name, travel_start_date, travel_end_date },
+    // });
 
-    if (existingTravelMode) {
-      return res.status(400).json({ error: "Duplicate entry. A travel mode with the same name and dates already exists." });
-    }
+    // if (existingTravelMode) {
+    //   return res.status(400).json({ error: "Duplicate entry. A travel mode with the same name and dates already exists." });
+    // }
 
     const travelMode = travelModeRepository.create(req.body);
     await travelModeRepository.save(travelMode);

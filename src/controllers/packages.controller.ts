@@ -12,14 +12,20 @@ import { removeUndefinedValues } from "../helpers/common"
   export const createPackage = async (req: Request, res: Response) => {
     try {
 
-      const {DestinationLocationIds, ...restReqBody} = req.body;
+      const {DestinationLocationIds = [], ...restReqBody} = req.body;
+
+      if(DestinationLocationIds.length === 0){
+        return res.status(400).json(
+          CreateErrorResponse("Error", "Destination Detail Required!", "Invalid")
+        );
+      }
 
       const packageData = packageRepository.create(restReqBody); 
-      const savedPackage = await packageRepository.save(packageData);
+      const savedPackage = await packageRepository.insert(packageData);
 
-      const newMappings = DestinationLocationIds.map(item => ({
+      const newMappings = DestinationLocationIds.map((item: number) => ({
         destination_location: { destinationLocation_id: Number(item) },
-        package: { package_id: savedPackage[0].package_id },
+        package: { package_id: savedPackage.identifiers[0].package_id },
       }));
     
       await packageDestLocationRepository.insert(newMappings);
