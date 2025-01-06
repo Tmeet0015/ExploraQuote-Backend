@@ -55,6 +55,7 @@ import { removeUndefinedValues } from "../helpers/common"
       const { page = 1, limit = 10, ...filters } = req.query;
 
       const [packages, total] = await packageRepository.findAndCount({
+        relations : { package_dest_location : true },
         where: { ...filters, is_active : true},
         skip: (Number(page) - 1) * Number(limit),
         take: Number(limit),
