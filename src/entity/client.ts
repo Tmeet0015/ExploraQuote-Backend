@@ -35,7 +35,7 @@ import { Itinerary } from "./itineraries";
     @OneToMany(() => Packages, (packages) => packages.client, { cascade: true })
     client_packages: Packages
     
-    @OneToMany(() => Itinerary, (itinerary) => itinerary.client, { cascade: true })
-    client_itinerary: Itinerary
+    // @OneToMany(() => Itinerary, (itinerary) => itinerary.client, { cascade: true })
+    // client_itinerary: Itinerary
   }
   

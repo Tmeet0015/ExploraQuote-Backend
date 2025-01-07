@@ -25,12 +25,12 @@ export class Itinerary {
   })
   packages: Packages;
 
-  @ManyToOne(() => Client, (client) => client.client_itinerary, { onDelete: 'CASCADE', nullable: true  })
-  @JoinColumn({
-      name: 'client',
-      referencedColumnName: 'client_id'
-  })
-  client: Client;
+  // @ManyToOne(() => Client, (client) => client.client_itinerary, { onDelete: 'CASCADE', nullable: true  })
+  // @JoinColumn({
+  //     name: 'client',
+  //     referencedColumnName: 'client_id'
+  // })
+  // client: Client;
 
   @Column({nullable: true })
   day_number: number;
@@ -38,8 +38,8 @@ export class Itinerary {
   @Column({nullable: true })
   travel_date: Date;
 
-  @Column({ type: "text",nullable: true  })
-  accommodation: string;
+  // @Column({ type: "text",nullable: true  })
+  // accommodation: string;
 
   @Column({ type: "text",nullable: true  })
   activities: string;
