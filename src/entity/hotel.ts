@@ -10,6 +10,7 @@ import {
   } from "typeorm";
   import { DestinationLocation } from "./destinationLocation";
 import { Itinerary } from "./itineraries";
+import { RoomType } from "./roomType";
   
   @Entity()
   export class Hotel {
@@ -34,9 +35,6 @@ import { Itinerary } from "./itineraries";
     @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
     price_per_night: number;
   
-    @Column({nullable: true })
-    room_types: string;
-  
     @CreateDateColumn()
     created_at: Date;
   
@@ -52,6 +50,9 @@ import { Itinerary } from "./itineraries";
 
     @OneToMany(() => Itinerary, (itr) => itr.hotel, { cascade: true })
     itinerary: Itinerary
+
+    @OneToMany(() => RoomType, (roomType) => roomType.hotel, { cascade: true, nullable : true})
+    roomTypes: RoomType
   
   }
   

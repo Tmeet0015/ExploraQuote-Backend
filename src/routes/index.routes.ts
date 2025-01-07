@@ -11,6 +11,9 @@ import hotelRoutes from './hotel.routes';
 import travelBookingsRoutes from './travel-booking.routes';
 import flightModeRoutes from './flightMode.routes';
 import travelModeRoutes from './travel-mode.routes';
+import roomTypeRoutes from './roomType.routes';
+import carRoutes from './car.routes';
+import trainRoutes from './train.routes';
 
 
 const mainRouter = express.Router();
@@ -27,5 +30,8 @@ mainRouter.use("/hotels", hotelRoutes);
 mainRouter.use("/travel-bookings", travelBookingsRoutes);
 mainRouter.use("/flight-details", flightModeRoutes);
 mainRouter.use("/travel-mode", travelModeRoutes);
+mainRouter.use("/room-types", roomTypeRoutes);
+mainRouter.use("/car-details", carRoutes);
+mainRouter.use("/train-details", trainRoutes);
 
 export default mainRouter;

@@ -14,6 +14,9 @@ import { FlightDetails } from "./entity/flightDetails";
 import { Hotel } from "./entity/hotel";
 import { TravelBooking } from "./entity/travelBooking";
 import { PackageDestLocation } from "./entity/packageDestLocation";
+import { RoomType } from "./entity/roomType";
+import { TrainDetails } from "./entity/trainDetail";
+import { CarDetails } from "./entity/cardDetail";
 
 require("dotenv").config();
 
@@ -40,7 +43,10 @@ export const AppDataSource = new DataSource({
     FlightDetails,
     Hotel,
     TravelBooking,
-    PackageDestLocation
+    PackageDestLocation,
+    RoomType,
+    TrainDetails,
+    CarDetails
   ],
   migrations: [],
   subscribers: [],
