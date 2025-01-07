@@ -22,7 +22,7 @@ export const createTravelMode = async (req: Request, res: Response) => {
     const travelMode = travelModeRepository.create(req.body);
     await travelModeRepository.save(travelMode);
 
-    return res.status(201).json(travelMode);
+    return res.status(201).send(CreateSuccessResponse(`Added Successfully!`));
   } catch (error) {
     const errorlog = {
       cameFrom: "createTravelMode",
@@ -44,7 +44,8 @@ export const getAllTravelModes = async (req: Request, res: Response) => {
       order: { created_at: "DESC" },
     });
 
-    return res.status(200).json({ data: travelModes, total, page: parseInt(page as string), limit: parseInt(limit as string) });
+    return res.status(200)
+    .json({ data: travelModes, total, page: parseInt(page as string), limit: parseInt(limit as string) });
   } catch (error) {
     const errorlog = {
       cameFrom: "getAllTravelModes",
