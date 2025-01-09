@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { AppDataSource } from "../data-source";
 import { Client } from "../entity/client";
+import { CreateErrorResponse } from "../helpers/responseHelper";
+import { writeTableErrorLog } from "../helpers/error_log";
 
 const clientRepository = AppDataSource.getRepository(Client);
 
@@ -10,7 +12,13 @@ const clientRepository = AppDataSource.getRepository(Client);
       const savedClient = await clientRepository.save(clientData); // Save to the database
       res.status(201).json(savedClient);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+     const errorlog = {
+        cameFrom: "createClient",
+        data: error,
+        token: res?.locals?.token ?? null,
+      };
+      writeTableErrorLog(errorlog);
+      return res.status(500).json(CreateErrorResponse("Error", "Internal Server Error", "Something went wrong."));
     }
   }
 
@@ -26,7 +34,13 @@ const clientRepository = AppDataSource.getRepository(Client);
 
       res.status(200).json({ data: clients, total, page, limit });
     } catch (error) {
-      res.status(500).json({ message: error.message });
+     const errorlog = {
+        cameFrom: "getClients",
+        data: error,
+        token: res?.locals?.token ?? null,
+      };
+      writeTableErrorLog(errorlog);
+      return res.status(500).json(CreateErrorResponse("Error", "Internal Server Error", "Something went wrong."));
     }
   }
 
@@ -41,7 +55,13 @@ const clientRepository = AppDataSource.getRepository(Client);
 
       res.status(200).json(clientData);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+     const errorlog = {
+        cameFrom: "getClientById",
+        data: error,
+        token: res?.locals?.token ?? null,
+      };
+      writeTableErrorLog(errorlog);
+      return res.status(500).json(CreateErrorResponse("Error", "Internal Server Error", "Something went wrong."));
     }
   }
 
@@ -57,7 +77,13 @@ const clientRepository = AppDataSource.getRepository(Client);
 
       res.status(200).json(updatedClient);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+     const errorlog = {
+        cameFrom: "updateClient",
+        data: error,
+        token: res?.locals?.token ?? null,
+      };
+      writeTableErrorLog(errorlog);
+      return res.status(500).json(CreateErrorResponse("Error", "Internal Server Error", "Something went wrong."));
     }
   }
 
@@ -72,6 +98,12 @@ const clientRepository = AppDataSource.getRepository(Client);
 
       res.status(200).json({ message: "Client deleted successfully" });
     } catch (error) {
-      res.status(500).json({ message: error.message });
+     const errorlog = {
+        cameFrom: "deleteClient",
+        data: error,
+        token: res?.locals?.token ?? null,
+      };
+      writeTableErrorLog(errorlog);
+      return res.status(500).json(CreateErrorResponse("Error", "Internal Server Error", "Something went wrong."));
     }
   }

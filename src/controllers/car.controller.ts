@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { CarDetails } from "../entity/cardDetail";
 import { AppDataSource } from "../data-source";
+import { writeTableErrorLog } from "../helpers/error_log";
+import { CreateErrorResponse } from "../helpers/responseHelper";
 
 const carDetailsRepository = AppDataSource.getRepository(CarDetails);
 
@@ -11,7 +13,13 @@ export const createCarDetails = async (req: Request, res: Response) => {
     await carDetailsRepository.save(carDetails);
     return res.status(201).json(carDetails);
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    const errorlog = {
+        cameFrom: "createCarDetails",
+        data: error,
+        token: res?.locals?.token ?? null,
+      };
+      writeTableErrorLog(errorlog);
+      return res.status(500).json(CreateErrorResponse("Error", "Internal Server Error", "Something went wrong."));
   }
 };
 
@@ -23,7 +31,13 @@ export const getAllCarDetails = async (req: Request, res: Response) => {
     });
     return res.status(200).json(carDetails);
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    const errorlog = {
+        cameFrom: "getAllCarDetails",
+        data: error,
+        token: res?.locals?.token ?? null,
+      };
+      writeTableErrorLog(errorlog);
+      return res.status(500).json(CreateErrorResponse("Error", "Internal Server Error", "Something went wrong."));
   }
 };
 
@@ -35,7 +49,13 @@ export const updateCarDetails = async (req: Request, res: Response) => {
     const updatedDetails = await carDetailsRepository.findOne({ where: { car_id: parseInt(id) } });
     return res.status(200).json(updatedDetails);
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    const errorlog = {
+        cameFrom: "updateCarDetails",
+        data: error,
+        token: res?.locals?.token ?? null,
+      };
+      writeTableErrorLog(errorlog);
+      return res.status(500).json(CreateErrorResponse("Error", "Internal Server Error", "Something went wrong."));
   }
 };
 
@@ -46,6 +66,12 @@ export const deleteCarDetails = async (req: Request, res: Response) => {
     await carDetailsRepository.delete(id);
     return res.status(200).json({ message: "Car details deleted successfully" });
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    const errorlog = {
+        cameFrom: "deleteCarDetails",
+        data: error,
+        token: res?.locals?.token ?? null,
+      };
+      writeTableErrorLog(errorlog);
+      return res.status(500).json(CreateErrorResponse("Error", "Internal Server Error", "Something went wrong."));
   }
 };

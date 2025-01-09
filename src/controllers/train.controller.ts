@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { TrainDetails } from "../entity/trainDetail";
 import { AppDataSource } from "../data-source";
+import { writeTableErrorLog } from "../helpers/error_log";
+import { CreateErrorResponse } from "../helpers/responseHelper";
 
 const trainDetailsRepository = AppDataSource.getRepository(TrainDetails);
 
@@ -11,7 +13,13 @@ export const createTrainDetails = async (req: Request, res: Response) => {
     await trainDetailsRepository.save(trainDetails);
     return res.status(201).json(trainDetails);
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    const errorlog = {
+                cameFrom: "createTrainDetails",
+                data: error,
+                token: res?.locals?.token ?? null,
+              };
+              writeTableErrorLog(errorlog);
+              return res.status(500).json(CreateErrorResponse("Error", "Internal Server Error", "Something went wrong."));
   }
 };
 
@@ -23,7 +31,13 @@ export const getAllTrainDetails = async (req: Request, res: Response) => {
     });
     return res.status(200).json(trainDetails);
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    const errorlog = {
+            cameFrom: "getAllTrainDetails",
+            data: error,
+            token: res?.locals?.token ?? null,
+          };
+          writeTableErrorLog(errorlog);
+          return res.status(500).json(CreateErrorResponse("Error", "Internal Server Error", "Something went wrong."));
   }
 };
 
@@ -35,7 +49,13 @@ export const updateTrainDetails = async (req: Request, res: Response) => {
     const updatedDetails = await trainDetailsRepository.findOne({ where: { train_id: parseInt(id) } });
     return res.status(200).json(updatedDetails);
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    const errorlog = {
+            cameFrom: "updateTrainDetails",
+            data: error,
+            token: res?.locals?.token ?? null,
+          };
+          writeTableErrorLog(errorlog);
+          return res.status(500).json(CreateErrorResponse("Error", "Internal Server Error", "Something went wrong."));
   }
 };
 
@@ -46,6 +66,12 @@ export const deleteTrainDetails = async (req: Request, res: Response) => {
     await trainDetailsRepository.delete(id);
     return res.status(200).json({ message: "Train details deleted successfully" });
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    const errorlog = {
+            cameFrom: "deleteTrainDetails",
+            data: error,
+            token: res?.locals?.token ?? null,
+          };
+          writeTableErrorLog(errorlog);
+          return res.status(500).json(CreateErrorResponse("Error", "Internal Server Error", "Something went wrong."));
   }
 };

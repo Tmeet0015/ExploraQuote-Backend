@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { AppDataSource } from "../data-source";
 import { Itinerary } from "../entity/itineraries";
+import { writeTableErrorLog } from "../helpers/error_log";
+import { CreateErrorResponse } from "../helpers/responseHelper";
 
   const itineraryRepository = AppDataSource.getRepository(Itinerary);
 
@@ -10,7 +12,13 @@ import { Itinerary } from "../entity/itineraries";
       const savedItinerary = await itineraryRepository.save(itineraryData); // Save to the database
       res.status(201).json(savedItinerary);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      const errorlog = {
+        cameFrom: "createItinerary",
+        data: error,
+        token: res?.locals?.token ?? null,
+      };
+      writeTableErrorLog(errorlog);
+      return res.status(500).json(CreateErrorResponse("Error", "Internal Server Error", "Something went wrong."));
     }
   }
 
@@ -26,7 +34,13 @@ import { Itinerary } from "../entity/itineraries";
 
       res.status(200).json({ data: itineraries, total, page, limit });
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      const errorlog = {
+        cameFrom: "getItineraries",
+        data: error,
+        token: res?.locals?.token ?? null,
+      };
+      writeTableErrorLog(errorlog);
+      return res.status(500).json(CreateErrorResponse("Error", "Internal Server Error", "Something went wrong."));
     }
   }
 
@@ -41,7 +55,13 @@ import { Itinerary } from "../entity/itineraries";
 
       res.status(200).json(itineraryData);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      const errorlog = {
+        cameFrom: "getItineraryById",
+        data: error,
+        token: res?.locals?.token ?? null,
+      };
+      writeTableErrorLog(errorlog);
+      return res.status(500).json(CreateErrorResponse("Error", "Internal Server Error", "Something went wrong."));
     }
   }
 
@@ -57,7 +77,13 @@ import { Itinerary } from "../entity/itineraries";
 
       res.status(200).json(updatedItinerary);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      const errorlog = {
+        cameFrom: "updateItinerary",
+        data: error,
+        token: res?.locals?.token ?? null,
+      };
+      writeTableErrorLog(errorlog);
+      return res.status(500).json(CreateErrorResponse("Error", "Internal Server Error", "Something went wrong."));
     }
   }
 
@@ -72,6 +98,12 @@ import { Itinerary } from "../entity/itineraries";
 
       res.status(200).json({ message: "Itinerary deleted successfully" });
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      const errorlog = {
+        cameFrom: "deleteItinerary",
+        data: error,
+        token: res?.locals?.token ?? null,
+      };
+      writeTableErrorLog(errorlog);
+      return res.status(500).json(CreateErrorResponse("Error", "Internal Server Error", "Something went wrong."));
     }
   }
