@@ -61,7 +61,9 @@ import { removeUndefinedValues } from "../helpers/common"
              destination : true
           }
           
-        } }, 
+        },
+        client : true 
+        }, 
         where: { ...filters, is_active : true},
         skip: (Number(page) - 1) * Number(limit),
         take: Number(limit),
