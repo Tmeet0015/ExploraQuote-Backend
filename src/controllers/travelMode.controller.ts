@@ -115,3 +115,26 @@ export const deleteTravelMode = async (req: Request, res: Response) => {
     return res.status(500).json(CreateErrorResponse("Error", "Internal Server Error", "Something went wrong."));
   }
 };
+
+export const getAutoIncrementTravelIndexNo = async (req: Request, res: Response) => {
+  try {
+
+    let existingTravelIndexNo = await travelModeRepository.find({
+      select : {trave_index_no : true},
+      order : {trave_index_no : 'DESC'},
+      take : 1
+    });
+
+   const autoIncrementNo = existingTravelIndexNo.length > 0 && existingTravelIndexNo[0].trave_index_no  ? Number(existingTravelIndexNo[0].trave_index_no) + 1 :  1;
+  
+    return res.status(200).send(CreateSuccessResponse(`Next Index Number Fetched!`,autoIncrementNo));
+  } catch (error) {
+    const errorlog = {
+      cameFrom: "createTravelMode",
+      data: error,
+      token: res?.locals?.token ?? null,
+    };
+    writeTableErrorLog(errorlog);
+    return res.status(500).json(CreateErrorResponse("Error", "Internal Server Error", "Something went wrong."));
+  }
+};
