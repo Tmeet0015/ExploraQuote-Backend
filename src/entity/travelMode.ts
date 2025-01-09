@@ -45,6 +45,12 @@ import { CarDetails } from "./cardDetail";
 
     @OneToMany(() => CarDetails, (carDetails) => carDetails.travel_mode, { cascade: true, nullable : true})
     car_details: CarDetails;
+
+    @Column({ nullable: true })
+    prefix_type: string;
+
+    @Column({ nullable: true, zerofill:true, unsigned : true, unique:true})
+    trave_index_no : number
   }
   
   

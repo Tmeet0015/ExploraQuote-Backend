@@ -8,21 +8,25 @@ const travelModeRepository = AppDataSource.getRepository(TravelMode);
 
 export const createTravelMode = async (req: Request, res: Response) => {
   try {
-    // const { name, travel_start_date, travel_end_date } = req.body;
 
-    // Prevent duplicate entries
-    // const existingTravelMode = await travelModeRepository.findOne({
-    //   where: { name, travel_start_date, travel_end_date },
-    // });
-
-    // if (existingTravelMode) {
-    //   return res.status(400).json({ error: "Duplicate entry. A travel mode with the same name and dates already exists." });
-    // }
+    let existingTravelIndexNo = await travelModeRepository.find({
+      select : {trave_index_no : true},
+      order : {trave_index_no : 'DESC'},
+      take : 1
+    });
+    Object.assign(req.body,{
+      trave_index_no : (existingTravelIndexNo.length > 0 && existingTravelIndexNo[0].trave_index_no  ? Number(existingTravelIndexNo[0].trave_index_no) + 1 :  1)
+    })
 
     const travelMode = travelModeRepository.create(req.body);
-    await travelModeRepository.save(travelMode);
 
-    return res.status(201).send(CreateSuccessResponse(`Added Successfully!`));
+    const insertedTravelModeId = (await travelModeRepository.insert(travelMode)).identifiers[0].travel_mode_id;
+
+    let result = await travelModeRepository.findOne({
+      where :{trave_index_no : insertedTravelModeId }
+    });
+
+    return res.status(201).send(CreateSuccessResponse(`Added Successfully!`,result));
   } catch (error) {
     const errorlog = {
       cameFrom: "createTravelMode",
