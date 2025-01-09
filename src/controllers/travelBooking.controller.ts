@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { AppDataSource } from "../data-source";
 import { TravelBooking } from "../entity/travelBooking";
+import { writeTableErrorLog } from "../helpers/error_log";
+import { CreateErrorResponse } from "../helpers/responseHelper";
 
 const travelBookingRepository = AppDataSource.getRepository(TravelBooking);
 
@@ -11,8 +13,14 @@ const travelBookingRepository = AppDataSource.getRepository(TravelBooking);
       await travelBookingRepository.save(travelBooking);
       return res.status(201).json(travelBooking);
     } catch (error) {
-      return res.status(400).json({ error: error.message });
-    }
+       const errorlog = {
+                 cameFrom: "createTravelBooking",
+                 data: error,
+                 token: res?.locals?.token ?? null,
+               };
+               writeTableErrorLog(errorlog);
+               return res.status(500).json(CreateErrorResponse("Error", "Internal Server Error", "Something went wrong."));
+        }
   }
 
   // List all Travel Bookings with Pagination and Relations
@@ -30,8 +38,14 @@ const travelBookingRepository = AppDataSource.getRepository(TravelBooking);
       });
       return res.status(200).json({ data: travelBookings, total });
     } catch (error) {
-      return res.status(400).json({ error: error.message });
-    }
+       const errorlog = {
+            cameFrom: "getTravelBookings",
+            data: error,
+            token: res?.locals?.token ?? null,
+          };
+          writeTableErrorLog(errorlog);
+          return res.status(500).json(CreateErrorResponse("Error", "Internal Server Error", "Something went wrong."));
+   }
   }
 
   // Update a Travel Booking
@@ -51,8 +65,14 @@ const travelBookingRepository = AppDataSource.getRepository(TravelBooking);
       }
       return res.status(200).json(updatedBooking);
     } catch (error) {
-      return res.status(400).json({ error: error.message });
-    }
+       const errorlog = {
+            cameFrom: "updateTravelBooking",
+            data: error,
+            token: res?.locals?.token ?? null,
+          };
+          writeTableErrorLog(errorlog);
+          return res.status(500).json(CreateErrorResponse("Error", "Internal Server Error", "Something went wrong."));
+   }
   }
 
   // Delete a Travel Booking
@@ -65,6 +85,12 @@ const travelBookingRepository = AppDataSource.getRepository(TravelBooking);
       }
       return res.status(200).json({ message: "Travel Booking deleted successfully" });
     } catch (error) {
-      return res.status(400).json({ error: error.message });
-    }
+       const errorlog = {
+            cameFrom: "deleteTravelBooking",
+            data: error,
+            token: res?.locals?.token ?? null,
+          };
+          writeTableErrorLog(errorlog);
+          return res.status(500).json(CreateErrorResponse("Error", "Internal Server Error", "Something went wrong."));
+   }
   }
