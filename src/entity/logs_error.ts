@@ -30,4 +30,7 @@ export class logs_error {
     })
     user: User;
 
+    @Column({ nullable: true, type: 'text' })
+    body: string
+    
 }

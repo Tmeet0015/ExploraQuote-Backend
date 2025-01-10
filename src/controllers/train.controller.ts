@@ -14,38 +14,54 @@ export const createTrainDetails = async (req: Request, res: Response) => {
     return res.status(201).json(trainDetails);
   } catch (error) {
     const errorlog = {
-                cameFrom: "createTrainDetails",
-                data: error,
-                token: res?.locals?.token ?? null,
-              };
-              writeTableErrorLog(errorlog);
-              return res.status(500).json(CreateErrorResponse("Error", "Internal Server Error", "Something went wrong."));
+      cameFrom: "createTrainDetails",
+      data: error,
+      token: res?.locals?.token ?? null,
+      body: req.body || null,
+    };
+    writeTableErrorLog(errorlog);
+    return res
+      .status(500)
+      .json(
+        CreateErrorResponse(
+          "Error",
+          "Internal Server Error",
+          "Something went wrong."
+        )
+      );
   }
 };
 
 // Get All Train Details
 export const getAllTrainDetails = async (req: Request, res: Response) => {
   try {
-
     const { page = 1, limit = 10 } = req.query;
 
     const [trainDetails, total] = await trainDetailsRepository.findAndCount({
-      relations: {travel_mode : true},
+      relations: { travel_mode: true },
       skip: (Number(page) - 1) * Number(limit),
       take: Number(limit),
       order: { created_at: "DESC" },
     });
 
-    return res.status(200).json({data : trainDetails,  total, page, limit});
-
+    return res.status(200).json({ data: trainDetails, total, page, limit });
   } catch (error) {
     const errorlog = {
-            cameFrom: "getAllTrainDetails",
-            data: error,
-            token: res?.locals?.token ?? null,
-          };
-          writeTableErrorLog(errorlog);
-          return res.status(500).json(CreateErrorResponse("Error", "Internal Server Error", "Something went wrong."));
+      cameFrom: "getAllTrainDetails",
+      data: error,
+      token: res?.locals?.token ?? null,
+      body: req.body || null,
+    };
+    writeTableErrorLog(errorlog);
+    return res
+      .status(500)
+      .json(
+        CreateErrorResponse(
+          "Error",
+          "Internal Server Error",
+          "Something went wrong."
+        )
+      );
   }
 };
 
@@ -54,25 +70,36 @@ export const updateTrainDetails = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
-  await trainDetailsRepository.update({
-    train_id : Number(id),
-    },
-    req.body
-  );
+    await trainDetailsRepository.update(
+      {
+        train_id: Number(id),
+      },
+      req.body
+    );
 
-    const updatedDetails = await trainDetailsRepository.findOne({ 
-      relations : {travel_mode : true},
-      where: { train_id: Number(id) } });
+    const updatedDetails = await trainDetailsRepository.findOne({
+      relations: { travel_mode: true },
+      where: { train_id: Number(id) },
+    });
 
-    return res.status(200).json({data : updatedDetails});
+    return res.status(200).json({ data: updatedDetails });
   } catch (error) {
     const errorlog = {
-            cameFrom: "updateTrainDetails",
-            data: error,
-            token: res?.locals?.token ?? null,
-          };
-          writeTableErrorLog(errorlog);
-          return res.status(500).json(CreateErrorResponse("Error", "Internal Server Error", "Something went wrong."));
+      cameFrom: "updateTrainDetails",
+      data: error,
+      token: res?.locals?.token ?? null,
+      body: req.body || null,
+    };
+    writeTableErrorLog(errorlog);
+    return res
+      .status(500)
+      .json(
+        CreateErrorResponse(
+          "Error",
+          "Internal Server Error",
+          "Something went wrong."
+        )
+      );
   }
 };
 
@@ -81,14 +108,25 @@ export const deleteTrainDetails = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     await trainDetailsRepository.delete(id);
-    return res.status(200).json({ message: "Train details deleted successfully" });
+    return res
+      .status(200)
+      .json({ message: "Train details deleted successfully" });
   } catch (error) {
     const errorlog = {
-            cameFrom: "deleteTrainDetails",
-            data: error,
-            token: res?.locals?.token ?? null,
-          };
-          writeTableErrorLog(errorlog);
-          return res.status(500).json(CreateErrorResponse("Error", "Internal Server Error", "Something went wrong."));
+      cameFrom: "deleteTrainDetails",
+      data: error,
+      token: res?.locals?.token ?? null,
+      body: req.body || null,
+    };
+    writeTableErrorLog(errorlog);
+    return res
+      .status(500)
+      .json(
+        CreateErrorResponse(
+          "Error",
+          "Internal Server Error",
+          "Something went wrong."
+        )
+      );
   }
 };

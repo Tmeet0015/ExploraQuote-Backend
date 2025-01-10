@@ -12,17 +12,19 @@ export const createRoomType = async (req: Request, res: Response) => {
     const { room_name, hotel } = req.body;
 
     const duplicate = await roomTypeRepository.findOne({
-      where: { room_name, hotel: { hotel_id : Number(hotel) } },
+      where: { room_name, hotel: { hotel_id: Number(hotel) } },
     });
 
     if (duplicate) {
-      return res.status(400).json(
-        CreateErrorResponse(
-          "Error",
-          `Room type already exists for this hotel!`,
-          "Invalid"
-        )
-      );
+      return res
+        .status(400)
+        .json(
+          CreateErrorResponse(
+            "Error",
+            `Room type already exists for this hotel!`,
+            "Invalid"
+          )
+        );
     }
 
     const roomType = roomTypeRepository.create(req.body);
@@ -30,21 +32,22 @@ export const createRoomType = async (req: Request, res: Response) => {
     await roomTypeRepository.insert(roomType);
     return res.status(201).json(roomType);
   } catch (error) {
-        const errorlog = {
-          cameFrom: "createRoomType",
-          data: error,
-          token: res?.locals?.token == null ? null : res?.locals?.token,
-        };
-        writeTableErrorLog(errorlog);
-        return res
-          .status(500)
-          .json(
-            CreateErrorResponse(
-              "Error",
-              `Internal Server Error!`,
-              "Something Went Wrong!!"
-            )
-          );
+    const errorlog = {
+      cameFrom: "createRoomType",
+      data: error,
+      token: res?.locals?.token ?? null,
+      body: req.body || null,
+    };
+    writeTableErrorLog(errorlog);
+    return res
+      .status(500)
+      .json(
+        CreateErrorResponse(
+          "Error",
+          `Internal Server Error!`,
+          "Something Went Wrong!!"
+        )
+      );
   }
 };
 
@@ -54,20 +57,21 @@ export const getAllRoomTypes = async (req: Request, res: Response) => {
     const { page = 1, limit = 10 } = req.body;
 
     const [roomTypes, count] = await roomTypeRepository.findAndCount({
-      relations: {hotel :true},
+      relations: { hotel: true },
       take: parseInt(limit as string),
       skip: (parseInt(page as string) - 1) * parseInt(limit as string),
-      where : {
-        status : 'active'
-      }
+      where: {
+        status: "active",
+      },
     });
 
     return res.status(200).json({ total: count, roomTypes });
   } catch (error) {
-        const errorlog = {
+    const errorlog = {
       cameFrom: "getAllRoomTypes",
       data: error,
-      token: res?.locals?.token == null ? null : res?.locals?.token,
+      token: res?.locals?.token ?? null,
+      body: req.body || null,
     };
     writeTableErrorLog(errorlog);
     return res
@@ -93,10 +97,11 @@ export const updateRoomType = async (req: Request, res: Response) => {
 
     return res.status(200).json(updatedRoomType);
   } catch (error) {
-        const errorlog = {
+    const errorlog = {
       cameFrom: "updateRoomType",
       data: error,
-      token: res?.locals?.token == null ? null : res?.locals?.token,
+      token: res?.locals?.token ?? null,
+      body: req.body || null,
     };
     writeTableErrorLog(errorlog);
     return res
@@ -115,14 +120,18 @@ export const updateRoomType = async (req: Request, res: Response) => {
 export const deleteRoomType = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
- //   await roomTypeRepository.delete(id);
-    await roomTypeRepository.update({room_type_id : Number(id)},{status : 'inactive'});
+    //   await roomTypeRepository.delete(id);
+    await roomTypeRepository.update(
+      { room_type_id: Number(id) },
+      { status: "inactive" }
+    );
     return res.status(200).json({ message: "Room type deleted successfully" });
   } catch (error) {
-        const errorlog = {
+    const errorlog = {
       cameFrom: "deleteRoomType",
       data: error,
-      token: res?.locals?.token == null ? null : res?.locals?.token,
+      token: res?.locals?.token ?? null,
+      body: req.body || null,
     };
     writeTableErrorLog(errorlog);
     return res

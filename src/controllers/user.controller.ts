@@ -11,16 +11,12 @@ import { User, Role } from "../entity/users";
 import process from "process";
 import { Not } from "typeorm";
 
-
 const UserRepository = AppDataSource.getRepository(User);
 
 // User & Admin Login
-export const login = async (req: Request, res: Response): Promise<any> =>  {
+export const login = async (req: Request, res: Response): Promise<any> => {
   try {
-    const {
-      email,
-      password
-    } = req.body;
+    const { email, password } = req.body;
 
     if (!email || !password) {
       return res
@@ -29,69 +25,69 @@ export const login = async (req: Request, res: Response): Promise<any> =>  {
     }
 
     let data: any;
-  
-      const newUserData = await UserRepository.findOne({
-        where: {
-          email: email,
-          is_active: true,
-        },
-      });
 
-      if (newUserData) {
-        const validUser = bcrypt.compareSync(password, newUserData.password);
+    const newUserData = await UserRepository.findOne({
+      where: {
+        email: email,
+        is_active: true,
+      },
+    });
 
-        if (!validUser) {
-          return res
-            .status(400)
-            .send(
-              CreateErrorResponse(
-                "Error",
-                "Login failed!! Please enter correct email and password",
-                "Invalid"
-              )
-            );
-        }
+    if (newUserData) {
+      const validUser = bcrypt.compareSync(password, newUserData.password);
 
-        const token = jwt.sign(
-          {
-            id: newUserData.id?.toString(),
-          },
-          process.env.SECRET_KEY,
-          {
-            expiresIn: "2 days",
-          }
-        );
-
-        newUserData["token"] = token;
-        delete newUserData["password"];
-
-        if (validUser) {
-          if (newUserData.is_active == false) {
-            return res
-              .status(400)
-              .send(
-                CreateErrorResponse(
-                  "Error",
-                  `Account does not exists!`,
-                  "Invalid"
-                )
-              );
-          }
-
-          data = newUserData;
-        }
-      } else {
+      if (!validUser) {
         return res
           .status(400)
           .send(
             CreateErrorResponse(
               "Error",
-              "Login failed!! Please enter correct password and email",
+              "Login failed!! Please enter correct email and password",
               "Invalid"
             )
           );
       }
-  
+
+      const token = jwt.sign(
+        {
+          id: newUserData.id?.toString(),
+        },
+        process.env.SECRET_KEY,
+        {
+          expiresIn: "2 days",
+        }
+      );
+
+      newUserData["token"] = token;
+      delete newUserData["password"];
+
+      if (validUser) {
+        if (newUserData.is_active == false) {
+          return res
+            .status(400)
+            .send(
+              CreateErrorResponse(
+                "Error",
+                `Account does not exists!`,
+                "Invalid"
+              )
+            );
+        }
+
+        data = newUserData;
+      }
+    } else {
+      return res
+        .status(400)
+        .send(
+          CreateErrorResponse(
+            "Error",
+            "Login failed!! Please enter correct password and email",
+            "Invalid"
+          )
+        );
+    }
+
     return res
       .status(200)
       .send(CreateSuccessResponse(`Welcome to Explore Tours & Travels!`, data));
@@ -99,7 +95,8 @@ export const login = async (req: Request, res: Response): Promise<any> =>  {
     const errorlog = {
       cameFrom: "login",
       data: error,
-      token: res?.locals?.token == null ? null : res?.locals?.token,
+      token: null,
+      body: req.body || null,
     };
     writeTableErrorLog(errorlog);
     return res
@@ -150,7 +147,8 @@ export const changePassword = async (req: Request, res: Response) => {
     const errorlog = {
       cameFrom: "changePassword",
       data: error,
-      token: res?.locals?.token == null ? null : res?.locals?.token,
+      token: res?.locals?.token ?? null,
+      body: req.body || null,
     };
     writeTableErrorLog(errorlog);
     return res
@@ -172,8 +170,7 @@ export const getUserProfileData = async (req: Request, res: Response) => {
     const token_data: any = jwt.decode(token);
 
     const user = await UserRepository.findOne({
-      relations: {
-      },
+      relations: {},
       where: { id: parseInt(token_data.id) },
     });
 
@@ -184,7 +181,8 @@ export const getUserProfileData = async (req: Request, res: Response) => {
     const errorlog = {
       cameFrom: "getUserProfileData",
       data: error,
-      token: res?.locals?.token == null ? null : res?.locals?.token,
+      token: res?.locals?.token ?? null,
+      body: req.body || null,
     };
     writeTableErrorLog(errorlog);
     return res
@@ -244,7 +242,8 @@ export const editUserProfile = async (req: Request, res: Response) => {
     const errorlog = {
       cameFrom: "editUserProfile",
       data: error,
-      token: res?.locals?.token == null ? null : res?.locals?.token,
+      token: res?.locals?.token ?? null,
+      body: req.body || null,
     };
     writeTableErrorLog(errorlog);
     return res
@@ -295,7 +294,8 @@ export const getUserProfileById = async (req: Request, res: Response) => {
     const errorlog = {
       cameFrom: "getUserProfileById",
       data: error,
-      token: res?.locals?.token == null ? null : res?.locals?.token,
+      token: res?.locals?.token ?? null,
+      body: req.body || null,
     };
     writeTableErrorLog(errorlog);
     return res
@@ -338,7 +338,12 @@ export const deleteUser = async (req: Request, res: Response) => {
     }
 
     //await UserRepository.delete({ id: parseInt(Id) });
-    await UserRepository.save({ id: parseInt(Id), is_active: false, updated_at: new Date(), deleted_at: new Date() });
+    await UserRepository.save({
+      id: parseInt(Id),
+      is_active: false,
+      updated_at: new Date(),
+      deleted_at: new Date(),
+    });
 
     return res
       .status(200)
@@ -347,7 +352,8 @@ export const deleteUser = async (req: Request, res: Response) => {
     writeTableErrorLog({
       cameFrom: "deleteUser",
       data: error,
-      token: null,
+      token: res?.locals?.token ?? null,
+      body: req.body || null,
     });
 
     return res
