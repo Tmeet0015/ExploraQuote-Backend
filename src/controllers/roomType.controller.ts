@@ -9,10 +9,10 @@ const roomTypeRepository = AppDataSource.getRepository(RoomType);
 // Create a new Room Type
 export const createRoomType = async (req: Request, res: Response) => {
   try {
-    const { room_name, hotel_id } = req.body;
+    const { room_name, hotel } = req.body;
 
     const duplicate = await roomTypeRepository.findOne({
-      where: { room_name, hotel: { hotel_id } },
+      where: { room_name, hotel: { hotel_id : Number(hotel) } },
     });
 
     if (duplicate) {
@@ -25,10 +25,7 @@ export const createRoomType = async (req: Request, res: Response) => {
       );
     }
 
-    const roomType = roomTypeRepository.create({
-      room_name,
-      hotel: { hotel_id },
-    });
+    const roomType = roomTypeRepository.create(req.body);
 
     await roomTypeRepository.insert(roomType);
     return res.status(201).json(roomType);
