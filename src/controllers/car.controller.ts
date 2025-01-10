@@ -26,10 +26,16 @@ export const createCarDetails = async (req: Request, res: Response) => {
 // Get All Car Details
 export const getAllCarDetails = async (req: Request, res: Response) => {
   try {
-    const carDetails = await carDetailsRepository.find({
-      relations: {travel_mode : true}
+
+    const { page = 1, limit = 10 } = req.query;
+
+    const [carDetails, total] = await carDetailsRepository.findAndCount({
+      relations: {travel_mode : true},
+      skip: (Number(page) - 1) * Number(limit),
+      take: Number(limit),
     });
-    return res.status(200).json(carDetails);
+
+    return res.status(200).json({data : carDetails,  total, page, limit});
   } catch (error) {
     const errorlog = {
         cameFrom: "getAllCarDetails",

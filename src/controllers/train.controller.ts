@@ -26,10 +26,18 @@ export const createTrainDetails = async (req: Request, res: Response) => {
 // Get All Train Details
 export const getAllTrainDetails = async (req: Request, res: Response) => {
   try {
-    const trainDetails = await trainDetailsRepository.find({
-      relations: {travel_mode : true}
+
+    const { page = 1, limit = 10 } = req.query;
+
+    const [trainDetails, total] = await trainDetailsRepository.findAndCount({
+      relations: {travel_mode : true},
+      skip: (Number(page) - 1) * Number(limit),
+      take: Number(limit),
+      order: { created_at: "DESC" },
     });
-    return res.status(200).json(trainDetails);
+
+    return res.status(200).json({data : trainDetails,  total, page, limit});
+
   } catch (error) {
     const errorlog = {
             cameFrom: "getAllTrainDetails",

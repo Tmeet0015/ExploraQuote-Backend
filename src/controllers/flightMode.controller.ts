@@ -42,15 +42,14 @@ try {
     const { page = 1, limit = 10 } = req.query;
 
     const [flights, total] = await flightDetailsRepository.findAndCount({
-    skip: (parseInt(page as string) - 1) * parseInt(limit as string),
-    take: parseInt(limit as string),
-    order: { created_at: "DESC" },
-    relations: {
-        travel_mode : true
-    },
+      relations: {travel_mode : true},
+      skip: (Number(page) - 1) * Number(limit),
+      take: Number(limit),
+      order: { created_at: "DESC" },
     });
 
-    return res.status(200).json({ data: flights, total, page: parseInt(page as string), limit: parseInt(limit as string) });
+    return res.status(200).json({data : flights,  total, page, limit});
+
 } catch (error) {
     const errorlog = {
     cameFrom: "getAllFlightDetails",
