@@ -11,13 +11,13 @@ const roomTypeRepository = AppDataSource.getRepository(RoomType);
 
 export const createHotel = async (req: Request, res: Response) => {
     try {
-      const { hotel_name, destination_location_id, roomType = [] } = req.body;
+      const { hotel_name, destination_location, roomType = [] } = req.body;
   
       const existingHotel = await hotelRepository.findOne({
         where: {
           hotel_name : String(hotel_name),
           destination_location : {
-            destinationLocation_id :  Number(destination_location_id),
+            destinationLocation_id :  Number(destination_location),
           }
         },
       });
