@@ -92,14 +92,14 @@ export const getHotels = async (req: Request, res: Response) => {
 export const updateHotel = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { hotel_name, destination_location_id } = req.body;
+    const { hotel_name, destination_location } = req.body;
 
     // Check for duplicates
     const existingHotel = await hotelRepository.findOne({
       where: {
         hotel_name,
         destination_location : {
-          destinationLocation_id : Number(destination_location_id)
+          destinationLocation_id : Number(destination_location)
         },
       },
     });
