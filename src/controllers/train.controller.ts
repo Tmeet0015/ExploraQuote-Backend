@@ -53,9 +53,18 @@ export const getAllTrainDetails = async (req: Request, res: Response) => {
 export const updateTrainDetails = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    await trainDetailsRepository.update(id, req.body);
-    const updatedDetails = await trainDetailsRepository.findOne({ where: { train_id: parseInt(id) } });
-    return res.status(200).json(updatedDetails);
+
+  await trainDetailsRepository.update({
+    train_id : Number(id),
+    },
+    req.body
+  );
+
+    const updatedDetails = await trainDetailsRepository.findOne({ 
+      relations : {travel_mode : true},
+      where: { train_id: Number(id) } });
+
+    return res.status(200).json({data : updatedDetails});
   } catch (error) {
     const errorlog = {
             cameFrom: "updateTrainDetails",

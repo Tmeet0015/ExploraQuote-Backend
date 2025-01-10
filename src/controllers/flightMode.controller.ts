@@ -64,22 +64,22 @@ try {
 export const updateFlightDetails = async (req: Request, res: Response) => {
 try {
     const { id } = req.params;
-    const { flight_no, travel_mode, flight_departure, flight_arrival } = req.body;
+    // const { flight_no, travel_mode, flight_departure, flight_arrival } = req.body;
 
     // Prevent duplicate entries
-    const duplicateCheck = await flightDetailsRepository.findOne({
-    where: { 
-      flight_no,  
-      travel_mode : {
-        travel_mode_id : Number(travel_mode)
-      }, 
-     flight_departure,
-     flight_arrival },
-    });
+    // const duplicateCheck = await flightDetailsRepository.findOne({
+    // where: { 
+    //   flight_no,  
+    //   travel_mode : {
+    //     travel_mode_id : Number(travel_mode)
+    //   }, 
+    //  flight_departure,
+    //  flight_arrival },
+    // });
 
-    if (duplicateCheck && duplicateCheck.flight_id !== parseInt(id)) {
-    return res.status(400).json({ error: "Duplicate entry. Flight details already exist." });
-    }
+    // if (duplicateCheck && duplicateCheck.flight_id !== parseInt(id)) {
+    // return res.status(400).json({ error: "Duplicate entry. Flight details already exist." });
+    // }
 
     await flightDetailsRepository.update({
       flight_id : Number(id)
@@ -87,12 +87,12 @@ try {
     req.body
   );
 
-    const updatedFlight = await flightDetailsRepository.findOneBy({ flight_id: parseInt(id) });
-    if (!updatedFlight) {
-    return res.status(404).json(CreateErrorResponse("Error", "Not Found", "Flight details not found."));
-    }
+  const updatedDetails = await flightDetailsRepository.findOne({ 
+    relations : {travel_mode : true},
+    where: { flight_id: Number(id) }
+    });     
 
-    return res.status(200).json({data : updatedFlight});
+  return res.status(200).json({data : updatedDetails});
 } catch (error) {
     const errorlog = {
     cameFrom: "updateFlightDetails",

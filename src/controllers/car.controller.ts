@@ -51,9 +51,19 @@ export const getAllCarDetails = async (req: Request, res: Response) => {
 export const updateCarDetails = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    await carDetailsRepository.update(id, req.body);
-    const updatedDetails = await carDetailsRepository.findOne({ where: { car_id: parseInt(id) } });
-    return res.status(200).json(updatedDetails);
+
+    await carDetailsRepository.update({
+      car_id : Number(id),
+      },
+      req.body
+    );
+  
+    const updatedDetails = await carDetailsRepository.findOne({ 
+      relations : {travel_mode : true},
+      where: { car_id: Number(id) }
+      });     
+
+    return res.status(200).json({data : updatedDetails});
   } catch (error) {
     const errorlog = {
         cameFrom: "updateCarDetails",

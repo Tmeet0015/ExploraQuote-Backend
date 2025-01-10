@@ -29,7 +29,7 @@ export const createHotel = async (req: Request, res: Response) => {
       }
   
       const hotel = hotelRepository.create(req.body);
-    const result =  await hotelRepository.insert(hotel);
+      const result =  await hotelRepository.insert(hotel);
 
     if(roomType.length) {
 
