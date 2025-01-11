@@ -11,7 +11,7 @@ const flightDetailsRepository = AppDataSource.getRepository(FlightDetails);
 
 export const createFlightDetails = async (req: Request, res: Response) => {
   try {
-    const { flight_no, travel_mode_id, flight_departure, flight_arrival } =
+    const { flight_no, travel_mode, flight_departure, flight_arrival } =
       req.body;
 
     // Prevent duplicate entries
@@ -19,7 +19,7 @@ export const createFlightDetails = async (req: Request, res: Response) => {
       where: {
         flight_no,
         travel_mode: {
-          travel_mode_id: Number(travel_mode_id),
+          travel_mode_id: Number(travel_mode),
         },
         flight_departure,
         flight_arrival,
@@ -91,23 +91,7 @@ export const getAllFlightDetails = async (req: Request, res: Response) => {
 export const updateFlightDetails = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    // const { flight_no, travel_mode, flight_departure, flight_arrival } = req.body;
-
-    // Prevent duplicate entries
-    // const duplicateCheck = await flightDetailsRepository.findOne({
-    // where: {
-    //   flight_no,
-    //   travel_mode : {
-    //     travel_mode_id : Number(travel_mode)
-    //   },
-    //  flight_departure,
-    //  flight_arrival },
-    // });
-
-    // if (duplicateCheck && duplicateCheck.flight_id !== parseInt(id)) {
-    // return res.status(400).json({ error: "Duplicate entry. Flight details already exist." });
-    // }
-
+    
     await flightDetailsRepository.update(
       {
         flight_id: Number(id),
