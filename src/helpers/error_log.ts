@@ -44,7 +44,7 @@ export const writeTableErrorLog = async (data) => {
             cameFrom: data?.cameFrom,
             message: data?.data.toString(),
             user: null,
-            body : data?.body
+            body : data?.body.toString(),
         }
 
         if (token != undefined || token != null) {
