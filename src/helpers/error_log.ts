@@ -58,7 +58,7 @@ export const writeTableErrorLog = async (data) => {
         writeErrorLog({
             cameFrom: obj_log.cameFrom,
             data: obj_log.message,
-            body : obj_log.body
+            body : obj_log.body.toString(),
         });
 
         await LogErrorRepository.insert(obj_log);
