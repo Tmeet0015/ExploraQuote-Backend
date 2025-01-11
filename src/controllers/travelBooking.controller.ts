@@ -38,7 +38,6 @@ export const getTravelBookings = async (req: Request, res: Response) => {
     const { page = 1, limit = 10 } = req.query;
     const [travelBookings, total] = await travelBookingRepository.findAndCount({
       relations: {
-        itinerary: true,
         travel_mode: true,
       },
 
@@ -74,7 +73,6 @@ export const updateTravelBooking = async (req: Request, res: Response) => {
     const updatedBooking = await travelBookingRepository.findOne({
       where: { travel_mode_booking_id: parseInt(id) },
       relations: {
-        itinerary: true,
         travel_mode: true,
       },
     });

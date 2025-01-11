@@ -6,11 +6,10 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   JoinColumn,
-  OneToMany,
 } from "typeorm";
 import { Packages } from "./packages";
-import { TravelBooking } from "./travelBooking";
 import { Hotel } from "./hotel";
+import { TravelMode } from "./travelMode";
 @Entity()
 export class Itinerary {
   @PrimaryGeneratedColumn()
@@ -57,8 +56,11 @@ export class Itinerary {
   })
   hotel: Hotel;
 
-
-  @OneToMany(() => TravelBooking, (travelBooking) => travelBooking.itinerary, { cascade: true })
-  travel_booking: TravelBooking
+  @ManyToOne(() => TravelMode, (travel) => travel.itinerary, { onDelete: 'CASCADE', nullable :true })
+  @JoinColumn({
+      name: 'travel_mode',
+      referencedColumnName: 'travel_mode_id'
+  })
+  travel_mode: TravelMode;
   
 }

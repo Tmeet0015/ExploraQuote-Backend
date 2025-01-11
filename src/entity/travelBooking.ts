@@ -7,20 +7,12 @@ import {
     UpdateDateColumn,
     JoinColumn,
   } from "typeorm";
-  import { Itinerary } from "./itineraries";
   import { TravelMode } from "./travelMode";
   
   @Entity()
   export class TravelBooking {
     @PrimaryGeneratedColumn()
     travel_mode_booking_id: number;
-
-    @ManyToOne(() => Itinerary, (itinerary) => itinerary.travel_booking, { onDelete: 'CASCADE', nullable :true })
-    @JoinColumn({
-        name: 'itinerary',
-        referencedColumnName: 'itinerary_id'
-    })
-    itinerary: Itinerary;
 
     @ManyToOne(() => TravelMode, (travel) => travel.travel_bookings, { onDelete: 'CASCADE', nullable :true })
     @JoinColumn({

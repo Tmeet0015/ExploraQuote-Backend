@@ -8,8 +8,8 @@ const itineraryRepository = AppDataSource.getRepository(Itinerary);
 
 export const createItinerary = async (req: Request, res: Response) => {
   try {
-    const itineraryData = itineraryRepository.create(req.body); // Create an entity instance
-    const savedItinerary = await itineraryRepository.save(itineraryData); // Save to the database
+    const itineraryData = itineraryRepository.create(req.body);
+    const savedItinerary = await itineraryRepository.save(itineraryData);
     res.status(201).json(savedItinerary);
   } catch (error) {
     const errorlog = {
@@ -36,6 +36,11 @@ export const getItineraries = async (req: Request, res: Response) => {
     const { page = 1, limit = 10, ...filters } = req.query;
 
     const [itineraries, total] = await itineraryRepository.findAndCount({
+      relations : {
+        packages : true,
+        hotel: true,
+        travel_mode : true
+      },
       where: { ...filters }, // Apply filters dynamically
       skip: (Number(page) - 1) * Number(limit),
       take: Number(limit),

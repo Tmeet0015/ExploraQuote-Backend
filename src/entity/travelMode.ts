@@ -10,6 +10,7 @@
 import { FlightDetails } from "./flightDetails";
 import { TrainDetails } from "./trainDetail";
 import { CarDetails } from "./cardDetail";
+import { Itinerary } from "./itineraries";
   
   @Entity()
   export class TravelMode {
@@ -50,7 +51,10 @@ import { CarDetails } from "./cardDetail";
     prefix_type: string;
 
     @Column({ nullable: true, zerofill:true, unsigned : true, unique:true})
-    trave_index_no : number
+    trave_index_no : number;
+
+    @OneToMany(() => Itinerary, (itn) => itn.travel_mode, { cascade: true, nullable : true })
+    itinerary: Itinerary;
   }
   
   
