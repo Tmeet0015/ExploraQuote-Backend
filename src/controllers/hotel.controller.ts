@@ -85,7 +85,10 @@ export const getHotels = async (req: Request, res: Response) => {
     const { page = 1, limit = 10 } = req.query;
     const [hotels, total] = await hotelRepository.findAndCount({
       relations: {
-        destination_location: true,
+        destination_location: {
+          destination : true,
+          location : true,
+        },
         roomTypes: true,
       },
       skip: (Number(page) - 1) * Number(limit),
