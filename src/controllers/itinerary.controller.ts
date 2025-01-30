@@ -2,15 +2,25 @@ import { Request, Response } from "express";
 import { AppDataSource } from "../data-source";
 import { Itinerary } from "../entity/itineraries";
 import { writeTableErrorLog } from "../helpers/error_log";
-import { CreateErrorResponse } from "../helpers/responseHelper";
+import { CreateErrorResponse, CreateSuccessResponse } from "../helpers/responseHelper";
 
 const itineraryRepository = AppDataSource.getRepository(Itinerary);
 
 export const createItinerary = async (req: Request, res: Response) => {
   try {
-    const itineraryData = itineraryRepository.create(req.body);
-    const savedItinerary = await itineraryRepository.save(itineraryData);
-    res.status(201).json(savedItinerary);
+    if (req.body?.items && Array.isArray(req.body.items) && req.body.items.length > 0) {
+      for (const [index, item] of req.body.items.entries()) {
+
+    const itineraryData = itineraryRepository.create(item);
+     await itineraryRepository.save(itineraryData);
+    }
+    res.status(201).json(CreateSuccessResponse(`Saved.`));
+    }
+    else {
+      const itineraryData = itineraryRepository.create(req.body);
+      await itineraryRepository.save(itineraryData);
+      res.status(201).json(CreateSuccessResponse(`Saved.`));
+    }
   } catch (error) {
     const errorlog = {
       cameFrom: "createItinerary",

@@ -12,6 +12,7 @@ import {
   import { Location } from "./location";
 import { Hotel } from "./hotel";
 import { PackageDestLocation } from "./packageDestLocation";
+import { Itinerary } from "./itineraries";
   
   @Entity()
   export class DestinationLocation {
@@ -50,5 +51,8 @@ import { PackageDestLocation } from "./packageDestLocation";
     
     @OneToMany(() => PackageDestLocation, (pkg) => pkg.destination_location, { cascade: true, nullable : true})
     package_dest_location: PackageDestLocation
+
+    @OneToMany(() => Itinerary, (itinerary) => itinerary.destination_location, { cascade: true, nullable : true })
+    itinerary: Itinerary
   }
   

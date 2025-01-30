@@ -11,10 +11,6 @@ import {
   import { Client } from "./client";
 import { Itinerary } from "./itineraries";
 import { PackageDestLocation } from "./packageDestLocation";
-  
-
-
-
   @Entity()
   export class Packages {
     @PrimaryGeneratedColumn()

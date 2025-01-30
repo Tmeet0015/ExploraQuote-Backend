@@ -10,6 +10,8 @@ import {
 import { Packages } from "./packages";
 import { Hotel } from "./hotel";
 import { TravelMode } from "./travelMode";
+import { DestinationLocation } from "./destinationLocation";
+
 @Entity()
 export class Itinerary {
   @PrimaryGeneratedColumn()
@@ -62,5 +64,21 @@ export class Itinerary {
       referencedColumnName: 'travel_mode_id'
   })
   travel_mode: TravelMode;
+
+  @Column({ type: "text", nullable: true  })
+  hotel_name: string;
+
+  @Column({ type: "text", nullable: true  })
+  room_type: string;
+
+  @Column({nullable: true })
+  no_of_room: number;
+
+  @ManyToOne(() => DestinationLocation, (dstloc) => dstloc.itinerary, { onDelete: 'CASCADE' })
+  @JoinColumn({
+      name: 'destination_location',
+      referencedColumnName: 'destinationLocation_id'
+  })
+  destination_location: DestinationLocation;
   
 }
