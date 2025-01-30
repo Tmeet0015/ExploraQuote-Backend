@@ -12,6 +12,9 @@ import {
 import { Itinerary } from "./itineraries";
 import { PackageDestLocation } from "./packageDestLocation";
   
+
+
+
   @Entity()
   export class Packages {
     @PrimaryGeneratedColumn()
@@ -72,6 +75,15 @@ import { PackageDestLocation } from "./packageDestLocation";
 
     @Column({ default: true })
     is_active: boolean
+
+    @Column({nullable: true })
+    adult: number;
+
+    @Column({nullable: true })
+    child: number;
+
+    @Column({nullable: true })
+    infant: number;
     
   }
   
