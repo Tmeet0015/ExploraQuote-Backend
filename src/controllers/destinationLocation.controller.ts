@@ -374,7 +374,7 @@ export const createLocation = async (
 
     return res
       .status(201)
-      .json(CreateSuccessResponse("Location created successfully!"));
+      .json(CreateSuccessResponse("Location created successfully!",{ location_id : result.identifiers[0].location_id}));
   } catch (error) {
     const errorlog = {
       cameFrom: "createLocation",
