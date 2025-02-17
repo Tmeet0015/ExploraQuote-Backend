@@ -7,7 +7,8 @@ import {
     OneToMany,
   } from "typeorm";
 import { Packages } from "./packages";
-import { Itinerary } from "./itineraries";
+import { TravelMode } from "./travelMode";
+// import { Itinerary } from "./itineraries";
   
   @Entity()
   export class Client {
@@ -37,5 +38,8 @@ import { Itinerary } from "./itineraries";
     
     // @OneToMany(() => Itinerary, (itinerary) => itinerary.client, { cascade: true })
     // client_itinerary: Itinerary
+
+    @OneToMany(() => TravelMode, (travelMode) => travelMode.client, { cascade: true, nullable : true})
+    travel_mode: TravelMode;
   }
   

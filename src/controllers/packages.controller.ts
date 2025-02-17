@@ -103,9 +103,17 @@ export const getPackages = async (req: Request, res: Response) => {
 export const getPackageById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const packageData = await packageRepository.findOneBy({
-      package_id: Number(id),
-      is_active: true,
+    const packageData = await packageRepository.findOne({
+      //      relations : ['client', 'itinerary_package','package_dest_location','package_dest_location.destination_location' ],
+      relations :{
+        client : true,
+        itinerary_package : { destination_location : { location : true, destination: true }},
+        package_dest_location : { destination_location : { location : true, destination: true }},
+      },
+      where :{
+        package_id: Number(id),
+        is_active: true,
+      }
     });
 
     if (!packageData) {

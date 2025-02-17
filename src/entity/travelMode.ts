@@ -5,12 +5,15 @@
     CreateDateColumn,
     UpdateDateColumn,
     OneToMany,
+    ManyToOne,
+    JoinColumn,
   } from "typeorm";
   import { TravelBooking } from "./travelBooking";
 import { FlightDetails } from "./flightDetails";
 import { TrainDetails } from "./trainDetail";
 import { CarDetails } from "./cardDetail";
 import { Itinerary } from "./itineraries";
+import { Client } from "./client";
   
   @Entity()
   export class TravelMode {
@@ -55,6 +58,13 @@ import { Itinerary } from "./itineraries";
 
     @OneToMany(() => Itinerary, (itn) => itn.travel_mode, { cascade: true, nullable : true })
     itinerary: Itinerary;
+
+    @ManyToOne(() => Client, (client) => client.travel_mode, { onDelete: 'CASCADE'  })
+    @JoinColumn({
+        name: 'client',
+        referencedColumnName: 'client_id'
+    })
+    client: Client;
   }
   
   
