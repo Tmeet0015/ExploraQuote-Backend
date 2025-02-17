@@ -39,7 +39,7 @@ export const createPackage = async (req: Request, res: Response) => {
 
     await packageDestLocationRepository.insert(newMappings);
 
-    res.status(201).send(CreateSuccessResponse(`Saved Successfully.`));
+    return res.status(201).send(CreateSuccessResponse(`Saved Successfully.`,{ package_id: savedPackage.identifiers[0].package_id }));
   } catch (error) {
     const errorlog = {
       cameFrom: "createPackage",
