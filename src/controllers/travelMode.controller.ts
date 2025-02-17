@@ -227,3 +227,46 @@ export const getAutoIncrementTravelIndexNo = async (
       );
   }
 };
+
+export const getTravelModeById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const travelModeData = await travelModeRepository.findOne({
+      relations :{
+        client : true,
+        travel_bookings: true,
+        flight_details: true,
+        train_details: true,
+        car_details: true,
+      },
+      where :{
+        travel_mode_id: Number(id)
+      }
+    });
+
+    if (!travelModeData) {
+      return res
+        .status(404)
+        .json(CreateErrorResponse("Error", `Travel detail does not exist!`, "Invalid"));
+    }
+
+    res.status(200).json(travelModeData);
+  } catch (error) {
+    const errorlog = {
+      cameFrom: "getTravelModeById",
+      data: error,
+      token: res?.locals?.token ?? null,
+      body: req.body || null,
+    };
+    writeTableErrorLog(errorlog);
+    return res
+      .status(500)
+      .json(
+        CreateErrorResponse(
+          "Error",
+          `Internal Server Error!`,
+          "Something Went Wrong!!"
+        )
+      );
+  }
+};

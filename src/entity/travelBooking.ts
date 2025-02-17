@@ -32,5 +32,9 @@ import {
   
     @UpdateDateColumn()
     updated_at: Date;
+
+    @Column({ type: "decimal", precision: 10, scale: 2,nullable: true  })
+    total_price: number;
+  
   }
   
