@@ -80,5 +80,8 @@ export class Itinerary {
       referencedColumnName: 'destinationLocation_id'
   })
   destination_location: DestinationLocation;
+
+  @Column({ default: true })
+  is_active: boolean
   
 }

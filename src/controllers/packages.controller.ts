@@ -8,6 +8,8 @@ import {
 } from "../helpers/responseHelper";
 import { writeTableErrorLog } from "../helpers/error_log";
 import { removeUndefinedValues } from "../helpers/common";
+import { Like, MoreThanOrEqual, LessThanOrEqual } from "typeorm";
+import moment from "moment";
 
 const packageRepository = AppDataSource.getRepository(Packages);
 const packageDestLocationRepository =
@@ -62,7 +64,30 @@ export const createPackage = async (req: Request, res: Response) => {
 
 export const getPackages = async (req: Request, res: Response) => {
   try {
-    const { page = 1, limit = 10, ...filters } = req.query;
+    const { page = 1, limit = 10, search, start_date, end_date } = req.body;
+
+    //search : package name, client name & status, price
+
+    let whereClause = [];
+    let dateFilter = {};
+    if (start_date && end_date) {
+      dateFilter = {
+        package_start_date: LessThanOrEqual(moment(end_date).format('YYYY-MM-DD')),
+        package_end_date:  MoreThanOrEqual(moment(start_date).format('YYYY-MM-DD')),
+      };
+    }
+
+    if (search) {
+      whereClause.push({package_name: Like(`%${search}%`), ...dateFilter, is_active: true})
+      whereClause.push({price: Like(`%${search}%`), ...dateFilter, is_active: true})
+      whereClause.push({client: { client_name: Like(`%${search}%`)}, ...dateFilter, is_active: true})
+    }
+    else {
+      whereClause.push({
+        ...dateFilter, is_active: true
+      })
+
+    }
 
     const [packages, total] = await packageRepository.findAndCount({
       relations: {
@@ -73,10 +98,12 @@ export const getPackages = async (req: Request, res: Response) => {
           },
         },
         client: true,
+        itinerary_package : { destination_location : { location : true, destination: true }},
       },
-      where: { ...filters, is_active: true },
+      where: whereClause,
       skip: (Number(page) - 1) * Number(limit),
       take: Number(limit),
+      order : {package_id : 'DESC'}
     });
 
     res.status(200).json({ data: packages, total, page, limit });

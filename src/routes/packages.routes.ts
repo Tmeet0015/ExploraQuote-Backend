@@ -8,7 +8,7 @@ const packagesRouter = Router();
 packagesRouter.post("/", authMiddleware, createPackage);
 
 // Route to get all packages with filters and pagination
-packagesRouter.get("/", authMiddleware, getPackages);
+packagesRouter.post("/get-all", authMiddleware, getPackages);
 
 // Route to get a single package by ID
 packagesRouter.get("/:id", authMiddleware, getPackageById);

@@ -51,7 +51,7 @@ export const getItineraries = async (req: Request, res: Response) => {
         hotel: true,
         travel_mode : true
       },
-      where: { ...filters }, // Apply filters dynamically
+      where: { ...filters, is_active : true }, // Apply filters dynamically
       skip: (Number(page) - 1) * Number(limit),
       take: Number(limit),
     });
@@ -82,6 +82,7 @@ export const getItineraryById = async (req: Request, res: Response) => {
     const { id } = req.params;
     const itineraryData = await itineraryRepository.findOneBy({
       itinerary_id: Number(id),
+      is_active : true
     });
 
     if (!itineraryData) {
@@ -145,7 +146,9 @@ export const updateItinerary = async (req: Request, res: Response) => {
 export const deleteItinerary = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const deleteResult = await itineraryRepository.delete(id);
+    const deleteResult = await itineraryRepository.update(id, {
+      is_active: false,
+    });
 
     if (!deleteResult.affected) {
       return res.status(404).json({ message: "Itinerary not found" });

@@ -8,7 +8,6 @@ import {
   } from "typeorm";
 import { Packages } from "./packages";
 import { TravelMode } from "./travelMode";
-// import { Itinerary } from "./itineraries";
   
   @Entity()
   export class Client {
@@ -22,10 +21,22 @@ import { TravelMode } from "./travelMode";
     client_contact: string;
   
     @Column({nullable: true })
-    adult_no: number;
+    email: string;
   
     @Column({nullable: true })
-    passport_details: string;
+    birth_date: Date;
+
+    @Column({nullable: true })
+    aadhar_number: string;
+
+    @Column({nullable: true })
+    passport_number: string;
+
+    @Column({nullable: true })
+    passport_issue_date: string;
+
+    @Column({nullable: true })
+    passport_expire_date: string;
   
     @CreateDateColumn()
     created_at: Date;
@@ -35,9 +46,6 @@ import { TravelMode } from "./travelMode";
 
     @OneToMany(() => Packages, (packages) => packages.client, { cascade: true })
     client_packages: Packages
-    
-    // @OneToMany(() => Itinerary, (itinerary) => itinerary.client, { cascade: true })
-    // client_itinerary: Itinerary
 
     @OneToMany(() => TravelMode, (travelMode) => travelMode.client, { cascade: true, nullable : true})
     travel_mode: TravelMode;

@@ -26,10 +26,10 @@ import { PackageDestLocation } from "./packageDestLocation";
     @Column({nullable: true })
     package_name: string;
   
-    @Column({nullable: true })
+    @Column({nullable: true, type : 'date' })
     package_start_date: Date;
   
-    @Column({nullable: true })
+    @Column({nullable: true , type : 'date' })
     package_end_date: Date;
   
     @Column({nullable: true })
