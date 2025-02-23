@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createItinerary, deleteItinerary, getItineraries, getItineraryById, updateItinerary } from "../controllers/itinerary.controller";
+import { createItinerary, deleteItinerary, getItineraries, getItineraryById, upsertItinerary } from "../controllers/itinerary.controller";
 import { authMiddleware } from "../middleware/jwt";
 
 const itineraryRouter = Router();
@@ -14,7 +14,7 @@ itineraryRouter.get("/", authMiddleware, getItineraries);
 itineraryRouter.get("/:id", authMiddleware, getItineraryById);
 
 // Route to update an itinerary
-itineraryRouter.put("/:id", authMiddleware, updateItinerary);
+itineraryRouter.put("/:id", authMiddleware, upsertItinerary);
 
 // Route to delete an itinerary
 itineraryRouter.delete("/:id", authMiddleware, deleteItinerary);

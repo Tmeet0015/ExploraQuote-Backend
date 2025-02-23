@@ -56,6 +56,7 @@ export const getItineraries = async (req: Request, res: Response) => {
       take: Number(limit),
     });
 
+
     res.status(200).json({ data: itineraries, total, page, limit });
   } catch (error) {
     const errorlog = {
@@ -110,22 +111,35 @@ export const getItineraryById = async (req: Request, res: Response) => {
   }
 };
 
-export const updateItinerary = async (req: Request, res: Response) => {
+export const upsertItinerary = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
-    await itineraryRepository.update(id, req.body); // Update itinerary
-    const updatedItinerary = await itineraryRepository.findOneBy({
-      itinerary_id: Number(id),
-    });
-
-    if (!updatedItinerary) {
-      return res.status(404).json({ message: "Itinerary not found" });
+    if (!req.body?.items || !Array.isArray(req.body.items) || req.body.items.length === 0) {
+      return res.status(400).json({ message: "Invalid request payload." });
     }
 
-    res.status(200).json(updatedItinerary);
+    for (const item of req.body.items) {
+      let itinerary: Itinerary | null = null;
+
+      if (item.itinerary_id) {
+        itinerary = await itineraryRepository.findOne({ where: { itinerary_id: item.itinerary_id } });
+      }
+
+      if (itinerary) {
+        // Update existing itinerary
+        itineraryRepository.merge(itinerary, item);
+        await itineraryRepository.save(itinerary);
+      } else {
+        // Create a new itinerary
+        const newItinerary = itineraryRepository.create(item);
+        await itineraryRepository.save(newItinerary);
+      }
+    }
+
+    res.status(200).json(CreateSuccessResponse(`Itinerary saved successfully!`,));
+
   } catch (error) {
     const errorlog = {
-      cameFrom: "updateItinerary",
+      cameFrom: "upsertItinerary",
       data: error,
       token: res?.locals?.token ?? null,
       body: req.body || null,
