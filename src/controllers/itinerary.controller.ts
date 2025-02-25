@@ -126,8 +126,7 @@ export const upsertItinerary = async (req: Request, res: Response) => {
 
       if (itinerary) {
         // Update existing itinerary
-        itineraryRepository.merge(itinerary, item);
-        await itineraryRepository.save(itinerary);
+        await itineraryRepository.update({ itinerary_id: item.itinerary_id } , item);
       } else {
         // Create a new itinerary
         const newItinerary = itineraryRepository.create(item);
