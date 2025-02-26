@@ -1,14 +1,7 @@
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 import { logs_error } from "./logs_error";
-
-
-export enum Role {
-    Admin = "admin",
-    Sales = "sales",
-    Marketing = "marketing",
-    Accountant = "accountant"
-}
+import { Role } from "./role";
 
 @Entity()
 export class User {
@@ -28,7 +21,11 @@ export class User {
     @Column({ default: false })
     is_admin: boolean
 
-    @Column({ default: Role.Admin })
+    @ManyToOne(() => Role, (role) => role.user, { onDelete: 'CASCADE' })
+    @JoinColumn({
+        name: 'role',
+        referencedColumnName: 'id'
+    })
     role: Role
 
     @Column({ nullable: true })

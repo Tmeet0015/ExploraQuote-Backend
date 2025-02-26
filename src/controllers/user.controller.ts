@@ -7,7 +7,7 @@ import {
 } from "../helpers/responseHelper";
 import { writeTableErrorLog } from "../helpers/error_log";
 import { AppDataSource } from "../data-source";
-import { User, Role } from "../entity/users";
+import { User } from "../entity/users";
 import process from "process";
 import { Not } from "typeorm";
 
@@ -331,7 +331,7 @@ export const deleteUser = async (req: Request, res: Response) => {
         .send(CreateErrorResponse("Error", "No User found!", `Invalid`));
     }
 
-    if (user_obj.role == Role.Admin) {
+    if (user_obj.is_admin) {
       return res
         .status(400)
         .send(CreateErrorResponse("Error", "Admin Can not delete!", `Invalid`));

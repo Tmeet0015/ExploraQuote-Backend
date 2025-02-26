@@ -17,6 +17,7 @@ import { PackageDestLocation } from "./entity/packageDestLocation";
 import { RoomType } from "./entity/roomType";
 import { TrainDetails } from "./entity/trainDetail";
 import { CarDetails } from "./entity/cardDetail";
+import { Role } from "./entity/role";
 
 require("dotenv").config();
 
@@ -46,7 +47,8 @@ export const AppDataSource = new DataSource({
     PackageDestLocation,
     RoomType,
     TrainDetails,
-    CarDetails
+    CarDetails,
+    Role
   ],
   migrations: [],
   subscribers: [],

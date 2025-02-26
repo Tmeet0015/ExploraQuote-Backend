@@ -14,6 +14,7 @@ import travelModeRoutes from './travel-mode.routes';
 import roomTypeRoutes from './roomType.routes';
 import carRoutes from './car.routes';
 import trainRoutes from './train.routes';
+import roleRoutes from './role.routes';
 
 
 const mainRouter = express.Router();
@@ -33,5 +34,6 @@ mainRouter.use("/travel-mode", travelModeRoutes);
 mainRouter.use("/room-types", roomTypeRoutes);
 mainRouter.use("/car-details", carRoutes);
 mainRouter.use("/train-details", trainRoutes);
+mainRouter.use("/roles", roleRoutes);
 
 export default mainRouter;

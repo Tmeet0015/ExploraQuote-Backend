@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "type": "commonjs",
-  "main": "src/index.ts",
+  "main": "build/index.ts",
   "scripts": {
     "predev": "rimraf build | tsc",
     "dev": "node build/index.js",
