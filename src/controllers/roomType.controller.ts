@@ -63,6 +63,7 @@ export const getAllRoomTypes = async (req: Request, res: Response) => {
       where: {
         status: "active",
       },
+      order : {room_type_id : 'DESC'}
     });
 
     return res.status(200).json({ total: count, roomTypes });

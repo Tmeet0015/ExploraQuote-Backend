@@ -256,3 +256,58 @@ export const deletePackage = async (req: Request, res: Response) => {
       );
   }
 };
+
+export const updatePackageStatus = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    
+    const updatedPackage = await packageRepository.findOneBy({
+      package_id: Number(id),
+    });
+
+    if (!updatedPackage) {
+      return res
+        .status(409)
+        .json(CreateErrorResponse("Error", `Package not found`, "Invalid"));
+    }
+
+    if(updatedPackage.status === "accepted" && status === "accepted"){
+      return res
+      .status(409)
+      .json(CreateErrorResponse("Error", `Status is already in 'accepted' state!`, "Invalid"));
+    }
+
+    const updatedData = {
+      status,
+    };
+
+    if(status === "accepted"){
+      Object.assign(updatedData, {
+        ...updatedData,
+        counter : updatedPackage.counter++
+      })
+    }
+
+    await packageRepository.update(id, updatedData);
+
+    res.status(200).json(CreateSuccessResponse(`Status Updated Successfully.`));
+  } catch (error) {
+    const errorlog = {
+      cameFrom: "updatePackageStatus",
+      data: error,
+      token: res?.locals?.token ?? null,
+      body: req.body || null,
+    };
+    writeTableErrorLog(errorlog);
+    return res
+      .status(500)
+      .json(
+        CreateErrorResponse(
+          "Error",
+          `Internal Server Error!`,
+          "Something Went Wrong!!"
+        )
+      );
+  }
+};

@@ -39,6 +39,7 @@ export const getClients = async (req: Request, res: Response) => {
       where: { ...filters }, // Apply filters dynamically
       skip: (Number(page) - 1) * Number(limit),
       take: Number(limit),
+      order : {client_id : "DESC"}
     });
 
     res.status(200).json({ data: clients, total, page, limit });

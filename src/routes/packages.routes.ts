@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createPackage, deletePackage, getPackageById, getPackages, updatePackage } from "../controllers/packages.controller";
+import { createPackage, deletePackage, getPackageById, getPackages, updatePackage, updatePackageStatus } from "../controllers/packages.controller";
 import { authMiddleware } from "../middleware/jwt";
 
 const packagesRouter = Router();
@@ -9,6 +9,9 @@ packagesRouter.post("/", authMiddleware, createPackage);
 
 // Route to get all packages with filters and pagination
 packagesRouter.post("/get-all", authMiddleware, getPackages);
+
+// Route to update status of package
+packagesRouter.put("/update-status/:id", authMiddleware, updatePackageStatus);
 
 // Route to get a single package by ID
 packagesRouter.get("/:id", authMiddleware, getPackageById);

@@ -43,6 +43,7 @@ export const getTravelBookings = async (req: Request, res: Response) => {
 
       skip: (Number(page) - 1) * Number(limit),
       take: Number(limit),
+      order : {travel_mode_booking_id : "DESC"}
     });
     return res.status(200).json({ data: travelBookings, total });
   } catch (error) {

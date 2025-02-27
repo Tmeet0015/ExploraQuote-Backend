@@ -54,6 +54,7 @@ export const getItineraries = async (req: Request, res: Response) => {
       where: { ...filters, is_active : true }, // Apply filters dynamically
       skip: (Number(page) - 1) * Number(limit),
       take: Number(limit),
+      order : {itinerary_id : "DESC"}
     });
 
 

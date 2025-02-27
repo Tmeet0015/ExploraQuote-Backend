@@ -80,6 +80,9 @@ import { PackageDestLocation } from "./packageDestLocation";
 
     @Column({nullable: true })
     infant: number;
+
+    @Column({default : 0, nullable : true })
+    counter: number;
     
   }
   

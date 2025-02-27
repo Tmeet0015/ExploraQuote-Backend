@@ -63,7 +63,7 @@ export const getAllTravelModes = async (req: Request, res: Response) => {
     const [travelModes, total] = await travelModeRepository.findAndCount({
       skip: (parseInt(page as string) - 1) * parseInt(limit as string),
       take: parseInt(limit as string),
-      order: { created_at: "DESC" },
+      order: { travel_mode_id: "DESC" },
     });
 
     return res

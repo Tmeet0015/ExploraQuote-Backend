@@ -13,7 +13,6 @@ import { Not } from "typeorm";
 
 const UserRepository = AppDataSource.getRepository(User);
 
-// User & Admin Login
 export const login = async (req: Request, res: Response): Promise<any> => {
   try {
     const { email, password } = req.body;

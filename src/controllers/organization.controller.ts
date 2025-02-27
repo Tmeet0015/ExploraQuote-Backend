@@ -37,7 +37,7 @@ export const createOrganization = async (req: Request, res: Response) => {
 
 export const getOrganizations = async (req: Request, res: Response) => {
   try {
-    const organizations = await OrganizationRepository.find();
+    const organizations = await OrganizationRepository.find({order : {organisation_id : "DESC"}});
     return res
       .status(200)
       .send(CreateSuccessResponse(`Fetch SuccessFully!`, organizations));

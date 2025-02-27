@@ -41,7 +41,7 @@ export const getAllTrainDetails = async (req: Request, res: Response) => {
       relations: { travel_mode: true },
       skip: (Number(page) - 1) * Number(limit),
       take: Number(limit),
-      order: { created_at: "DESC" },
+      order: { train_id: "DESC" },
     });
 
     return res.status(200).json({ data: trainDetails, total, page, limit });

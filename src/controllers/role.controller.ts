@@ -66,7 +66,7 @@ export const createRole = async (req: Request, res: Response) => {
 // Get All Roles
 export const getRoles = async (req: Request, res: Response) => {
   try {
-    const roles = await RoleRepository.find();
+    const roles = await RoleRepository.find({order : {role_name : "ASC"}});
     return res
     .status(200)
     .send(CreateSuccessResponse(`Role created successfully!`, {roles: roles}));

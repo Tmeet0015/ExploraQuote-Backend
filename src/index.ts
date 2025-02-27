@@ -4,6 +4,7 @@ import cors from 'cors'
 import mainRouter from './routes/index.routes'
 import http from 'http'
 import dotenv from "dotenv"
+import "./controllers/cronJobs.controller"; 
 
 dotenv.config()
 

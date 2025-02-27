@@ -18,6 +18,7 @@ import { RoomType } from "./entity/roomType";
 import { TrainDetails } from "./entity/trainDetail";
 import { CarDetails } from "./entity/cardDetail";
 import { Role } from "./entity/role";
+import { CronLog } from "./entity/cronLog";
 
 require("dotenv").config();
 
@@ -48,7 +49,8 @@ export const AppDataSource = new DataSource({
     RoomType,
     TrainDetails,
     CarDetails,
-    Role
+    Role,
+    CronLog
   ],
   migrations: [],
   subscribers: [],

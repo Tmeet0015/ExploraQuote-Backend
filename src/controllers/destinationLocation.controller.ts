@@ -79,7 +79,7 @@ export const getAllDestination = async (
   res: Response
 ): Promise<any> => {
   try {
-    let { page, limit, sortBy, order, type, status, search } = req.body;
+    let { page, limit, sortBy, order = "DESC", type, status, search } = req.body;
 
     // Validation Checks
     page = parseInt(page) || 1;
@@ -401,12 +401,12 @@ export const getAllLocation = async (
   res: Response
 ): Promise<any> => {
   try {
-    let { page, limit, sortBy, order, status, search } = req.body;
+    let { page, limit, sortBy, order = "DESC", status, search } = req.body;
 
     // Validation Checks
     page = parseInt(page) || 1;
     limit = parseInt(limit) || 10;
-    sortBy = sortBy ?? "location_id";
+    sortBy = sortBy || "location_id";
 
     order = order?.toUpperCase() === "DESC" ? "DESC" : "ASC";
 

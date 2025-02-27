@@ -41,6 +41,7 @@ export const getAllCarDetails = async (req: Request, res: Response) => {
       relations: { travel_mode: true },
       skip: (Number(page) - 1) * Number(limit),
       take: Number(limit),
+      order : {car_id : "DESC"}
     });
 
     return res.status(200).json({ data: carDetails, total, page, limit });
