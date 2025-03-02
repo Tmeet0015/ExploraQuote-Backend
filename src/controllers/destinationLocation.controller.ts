@@ -223,31 +223,33 @@ export const updateDestination = async (
 ): Promise<any> => {
   try {
     const { id } = req.params;
-    const { destination_name, type, status } = req.body;
+    const { destination_name } = req.body;
 
-    if (!id || !destination_name || !type || !status) {
-      return res
-        .status(400)
-        .json(CreateErrorResponse("Error", "Invalid Payload!", "Invalid"));
-    }
+    // if (!id || !destination_name || !type || !status) {
+    //   return res
+    //     .status(400)
+    //     .json(CreateErrorResponse("Error", "Invalid Payload!", "Invalid"));
+    // }
 
-    const existingDestination = await DestinationRepository.findOne({
-      where: {
-        destination_name,
-        destination_id: Not(Number(id)),
-      },
-    });
-
-    if (existingDestination) {
-      return res
-        .status(400)
-        .json(
-          CreateErrorResponse(
-            "Error",
-            "Destination name already exists!",
-            "Duplicate"
-          )
-        );
+    if(destination_name){
+      const existingDestination = await DestinationRepository.findOne({
+        where: {
+          destination_name,
+          destination_id: Not(Number(id)),
+        },
+      });
+  
+      if (existingDestination) {
+        return res
+          .status(400)
+          .json(
+            CreateErrorResponse(
+              "Error",
+              "Destination name already exists!",
+              "Duplicate"
+            )
+          );
+      }
     }
 
     const updateResult = await DestinationRepository.update(id, req.body);
@@ -536,12 +538,13 @@ export const updateLocation = async (
     const { id } = req.params;
     const { location_name } = req.body;
 
-    if (!id || !location_name) {
-      return res
-        .status(400)
-        .json(CreateErrorResponse("Error", "Invalid Payload!", "Invalid"));
-    }
+    // if (!id || !location_name) {
+    //   return res
+    //     .status(400)
+    //     .json(CreateErrorResponse("Error", "Invalid Payload!", "Invalid"));
+    // }
 
+    if(!location_name) {
     const existingLocation = await LocationRepository.findOne({
       where: {
         location_name,
@@ -560,6 +563,8 @@ export const updateLocation = async (
           )
         );
     }
+   }
+
 
     const updateResult = await LocationRepository.update(id, req.body);
 
@@ -947,5 +952,80 @@ export const deleteDestinationLocation = async (
       );
   }
 };
+
+// Update an existing destination location status
+export const updateDestinationLocationStatus = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    if(!["active" , "inactive"].includes(status)){
+      return res
+      .status(400)
+      .send(
+        CreateErrorResponse(
+          "Error",
+          "Invalid Status, must be active or inactive!",
+          "Invalid"
+        )
+      );
+    } 
+
+    const destinationLocation = await DestinationLocationRepository.findOne({
+      where: { destinationLocation_id: parseInt(id) },
+      relations: {
+        destination: true,
+        location: true,
+      },
+    });
+
+    if (!destinationLocation) {
+      return res
+        .status(404)
+        .send(
+          CreateErrorResponse(
+            "Error",
+            "Destination Location not found!",
+            "Invalid"
+          )
+        );
+    }
+    
+
+    destinationLocation.status = status;
+
+    await DestinationLocationRepository.save(destinationLocation);
+
+    return res
+      .status(200)
+      .send(
+        CreateSuccessResponse(
+          "Destination Location updated successfully!",
+          destinationLocation
+        )
+      );
+  } catch (error) {
+    const errorlog = {
+      cameFrom: "updateDestinationLocation",
+      data: error,
+      token: res?.locals?.token || null,
+      body: req.body || null,
+    };
+    writeTableErrorLog(errorlog);
+    return res
+      .status(500)
+      .json(
+        CreateErrorResponse(
+          "Error",
+          "Internal Server Error!",
+          "Something went wrong"
+        )
+      );
+  }
+};
+
 
 //#endregion DestinationLocation

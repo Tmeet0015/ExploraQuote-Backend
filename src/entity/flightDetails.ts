@@ -24,8 +24,8 @@ import {
     @Column({ nullable: true })
     flight_no: string;
   
-    @Column({ type: "int", nullable: true })
-    flight_duration: number;
+    @Column({ nullable: true })
+    flight_duration: string;
   
     @Column({ type: "datetime", nullable: true })
     flight_departure: Date;

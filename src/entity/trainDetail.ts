@@ -21,8 +21,8 @@ import {
     @Column({ nullable: true })
     train_no: string;
   
-    @Column({ type: "int", nullable: true })
-    train_duration: number;
+    @Column({ nullable: true })
+    train_duration: string;
   
     @Column({ type: "datetime", nullable: true })
     train_departure: Date;
