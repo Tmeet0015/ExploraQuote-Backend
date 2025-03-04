@@ -38,7 +38,7 @@ export const getAllCarDetails = async (req: Request, res: Response) => {
     const { page = 1, limit = 10 } = req.query;
 
     const [carDetails, total] = await carDetailsRepository.findAndCount({
-      relations: { travel_mode: true },
+      relations: {travel_mode : {client :true,}  },
       skip: (Number(page) - 1) * Number(limit),
       take: Number(limit),
       order : {car_id : "DESC"}

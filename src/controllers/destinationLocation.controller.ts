@@ -648,27 +648,62 @@ export const getAllDestinationLocations = async (
   res: Response
 ): Promise<any> => {
   try {
-    const destinationLocations = await DestinationLocationRepository.find({
+
+    let { page, limit, sortBy, order = "DESC", status } = req.body;
+
+     page = parseInt(page) || 1;
+     limit = parseInt(limit) || 10;
+     sortBy = sortBy || "destinationLocation_id";
+     order = order.toUpperCase() === "DESC" ? "DESC" : "ASC";
+
+     if (status && !["active", "inactive"].includes(status)) {
+      return res
+        .status(400)
+        .json(
+          CreateErrorResponse("Error", "Invalid status filter!", "Invalid")
+        );
+    }
+
+    const whereConditions: Record<string, unknown> = {
+      destination: {
+        status: "active",
+      },
+      location: {
+        status: "active",
+      },
+    };
+
+    if (status) whereConditions.status = status;
+    
+    // if (search) {
+    //   Object.assign(whereConditions, {
+    //     destination_name: ILike(`%${search}%`),
+    //   });
+    // }
+
+    // Pagination and Sorting
+    const [destinationLocations, total] = await DestinationLocationRepository.findAndCount({
       relations: {
         destination: true,
         location: true,
       },
-      where: {
-        status: "active",
-        destination: {
-          status: "active",
-        },
-        location: {
-          status: "active",
-        },
-      },
+      where: whereConditions,
+      order: { [sortBy]: order },
+      skip: (page - 1) * limit,
+      take: limit,
     });
+
     return res
       .status(200)
       .send(
         CreateSuccessResponse(
           "Destination locations fetched successfully!",
-          destinationLocations
+          {
+            total,
+            currentPage: page,
+            totalPages: Math.ceil(total / limit),
+            destinationLocations,
+          }          
         )
       );
   } catch (error) {
